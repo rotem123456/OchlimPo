@@ -19,9 +19,15 @@ services:
       - postgres
     environment:
       - DATABASE_URL=postgresql://myuser:mypassword@postgres:5432/mydb
+      - NODE_ENV=development
     volumes:
-      - .:/usr/src/app
+      - ./src:/usr/src/app/src
+      - ./prisma:/usr/src/app/prisma
+      - ./package.json:/usr/src/app/package.json
+      - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./tsconfig.json:/usr/src/app/tsconfig.json
       - /usr/src/app/node_modules
+    command: npm run devStart
 
 volumes:
   postgres_data:

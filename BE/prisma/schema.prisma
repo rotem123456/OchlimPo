@@ -14,7 +14,7 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  type      String
+  type      String //Blogger/Chef/Poster/Viewer
   recipes   Recipe[] // Add this relation
 }
 
@@ -22,7 +22,7 @@ model Recipe {
   id          Int      @id @default(autoincrement())
   name        String
   time        Float
-  ingridients String[] // Note: keeping the original spelling
+  ingridients String[] 
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
