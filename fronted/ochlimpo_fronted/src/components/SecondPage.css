@@ -1,0 +1,64 @@
+/* Second Page Styles */
+.second-page {
+    padding: 20px;
+    background-color: #000000;
+    height: 100vh;
+  }
+  
+  /* Rectangle Box */
+  .scrolling-rectangle {
+    width: 100%;
+    max-width: 900px;
+    height: 400px; /* Height of two rows */
+    margin: 20px auto;
+    background-color: #2b2929;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow-y: auto; /* Enable scrolling for the third row */
+  }
+  
+  /* Row styles */
+  .row {
+    margin-bottom: 20px;
+  }
+  
+  .row-title {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  
+  /* Items container */
+  .items-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  
+  /* Item button */
+  .item-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+  }
+  
+  .circle-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  .item-name {
+    font-size: 0.9rem;
+    color: #fff;
+  }
+  
