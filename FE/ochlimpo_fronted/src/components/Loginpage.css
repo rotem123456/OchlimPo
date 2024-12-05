@@ -1,0 +1,11 @@
+.background {
+    background-image: url("../../public/images/background_2.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }

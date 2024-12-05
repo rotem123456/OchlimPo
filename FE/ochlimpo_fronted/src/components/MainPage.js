@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./MainPage.css";
 
 const MainPage = () => {
@@ -6,6 +7,7 @@ const MainPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [bloggers, setBloggers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -90,7 +92,7 @@ const MainPage = () => {
         </div>
 
         <button className="button">Sign Up</button>
-        <button className="button">Sign In</button>
+        <button className = "button" onClick={() => navigate('/login')}>Sign In</button>
       </div>
     </div>
   );

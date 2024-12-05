@@ -7,6 +7,140 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FoodCategory {
+  dietary
+  taste
+  cuisine
+  ingredient
+  preparation
+  course
+}
+
+enum UserType {
+  BLOGGER
+  CHEF
+  POSTER
+  VIEWER
+}
+
+
+enum FoodType {
+ vegitarian
+ meat
+ vegan
+ glutenFree
+ keto
+ paleo
+ dairy
+ spicy
+ sweet
+ savory 
+ sour
+ bitter
+ seafood
+ halal
+ kosher
+ raw
+ grilled
+ fried
+ baked
+ steamed
+ roasted
+ indian
+ chinese
+ japanese
+ korean
+ thai
+ italian
+ mexican
+ mediterranean
+ french
+ vietnamese
+ lowCarb
+ highProtein
+ organic
+ fusion
+ streetFood
+ gourmet
+ comfort
+ seasonal
+ breakfast
+ brunch
+ lunch
+ dinner
+ appetizer
+ mainCourse
+ dessert
+ snack
+ soup
+ salad
+ sandwich
+ noodles
+ rice
+ bbq
+}
+
+
+enum Ingredients {
+ // Proteins
+ chicken
+ beef
+ pork
+ lamb
+ salmon
+ tuna
+ shrimp
+ tofu
+ eggs
+
+ // Vegetables
+ onion
+ garlic
+ tomato
+ potato
+ carrot
+ broccoli
+ spinach
+ mushroom
+ bellPepper
+ cucumber
+ 
+ // Grains & Starches
+ rice
+ pasta
+ bread
+ quinoa
+ oats
+ 
+ // Dairy
+ milk
+ cheese
+ yogurt
+ butter
+ cream
+
+ // Herbs & Spices
+ basil
+ oregano
+ thyme
+ cumin
+ paprika
+ cinnamon
+ turmeric
+ ginger
+ chili
+ blackPepper
+
+ // Pantry Items
+ olive_oil
+ soySauce
+ vinegar
+ honey
+ flour
+ sugar
+ salt
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -14,17 +148,41 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  type      String //Blogger/Chef/Poster/Viewer
-  recipes   Recipe[] // Add this relation
+  type      UserType
+  recipe Recipe[] 
+  userScore Int  @default(0)
+  userSaved Int  @default(0)
 }
 
 model Recipe {
-  id          Int      @id @default(autoincrement())
-  name        String
-  time        Float
-  ingridients String[] 
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+ id          Int         @id @default(autoincrement())
+ name        String
+ time        String 
+ shortDescription String @default("No Description Added")
+ tags        RecipeType[]  
+ ingredients Ingredient[]   
+ user     User @relation(fields: [userId], references: [id])
+ userId Int
+ createdAt   DateTime    @default(now())
+ updatedAt   DateTime    @updatedAt
+ foodCategory FoodCategory
+  @@index([userId])
 }
+
+model RecipeType {
+  id        Int      @id @default(autoincrement())
+  type      FoodType
+  recipeId  Int
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  @@unique([recipeId, type])
+}
+
+model Ingredient {
+  id Int @id @default(autoincrement())
+  ingridient Ingredients
+  amount Float
+  recipeId    Int
+  recipe      Recipe      @relation(fields: [recipeId], references: [id])
+   @@index([recipeId])
+}
+
