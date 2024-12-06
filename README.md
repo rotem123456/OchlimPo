@@ -1,36 +1,33 @@
-OchlimPo
-Prerequisites
+# OchlimPo
 
-Docker Desktop installed on your computer
+A platform to simplify and streamline your project development experience.
 
-Setup & Installation
-Backend Setup
+---
 
-Navigate to the BE (Backend) folder and start the server:
+## Prerequisites
 
-bashCopydocker compose up --build
-This will start the backend server on localhost:4000
+Before setting up the application, ensure you have the following installed:
+- **Docker Desktop**
+- **Node.js** (for the frontend)
+- **npm** (Node Package Manager)
 
-In the same BE folder, generate the Prisma client:
+---
 
-bashCopynpx prisma generate
-Note: If this command fails, you may need to install Prisma locally first.
-This will open Prisma Studio UI on port 5555.
-Frontend Setup
+## Backend Setup
 
-Navigate to the FE (Frontend) folder and start the application:
+1. **Start the Server**  
+   Navigate to the `BE` (Backend) folder and run the following command to build and start the server (port 4000):
+   ```bash
+   docker compose up --build
 
-bashCopynpm start
-This will launch the frontend on localhost:3000
-Quick Start Guide
+2. **UI FOR BE**  
+   Navigate to the `BE` (Backend) folder and run the following command to start the UI (port 5555):
+   ```bash 
+   npx prisma studio 
 
-Open three separate terminals
-Follow the Backend Setup steps in the first two terminals
-Execute the Frontend Setup in the third terminal
-Your application should now be running and accessible
 
-Port Information
-
-Backend: localhost:4000
-Database UI: localhost:5555
-Frontend: localhost:3000
+## Frontend setup
+**Start the FE**  
+   Navigate to the `FE` folder and run the following command to build and start the server (port 3000):
+   ```bash
+  npm install npm start 
