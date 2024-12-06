@@ -91,7 +91,7 @@ const MainPage = () => {
           />
         </div>
 
-        <button className="button">Sign Up</button>
+        <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
         <button className = "button" onClick={() => navigate('/login')}>Sign In</button>
       </div>
     </div>

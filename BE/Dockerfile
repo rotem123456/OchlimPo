@@ -7,8 +7,7 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install && \
-    npm install -g ts-node typescript nodemon bcrypt @types/bcrypt
-
+    npm install -g ts-node typescript nodemon bcrypt @types/bcrypt cors 
 COPY . .
 
 # Generate Prisma Client

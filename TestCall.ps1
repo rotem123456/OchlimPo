@@ -5,5 +5,5 @@
     type = "bloggers"
 } | ConvertTo-Json
 
-Invoke-RestMethod -Method Post -Uri "http://localhost:3000/users" -ContentType "application/json" -Body $userBody
+Invoke-RestMethod -Method Post -Uri "http://localhost:4000/user/create" -ContentType "application/json" -Body $userBody
 
