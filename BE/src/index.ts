@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';  // Add this import
 import { PrismaClient } from '@prisma/client';
 import userRoutes from './routes/userroutes';
-
+import reciperoutes from './routes/reciperoutes' 
+;
 const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.use(express.json());
 
 //routes
 app.use('/user', userRoutes); 
+app.use('/recipe',reciperoutes);
 
 app.get('/', (req, res) => {
   res.json({ message: 'OchlimPo BE' });

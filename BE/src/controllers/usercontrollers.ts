@@ -43,17 +43,27 @@ export const userController = {
     }
   },
 
-  getUserByMail:async(req:Request,res:Response)=>
-  {
+  getUserByMail: async (req: Request, res: Response) => {
     try {
-      const {email} = req.params;
+      const { email } = req.params;
+      console.log('Checking email:', email);
+      
       const user = await prisma.user.findUnique({
-        where:{email: email}
+        where: { email: email }
       });
-      console.log('Founder user with email', email)
-      res.json(user);
+      
+      if (user) {
+        console.log('Found user with email', email);
+        res.sendStatus(201); 
+      } else {
+        console.log('No user found with email', email);
+        res.sendStatus(404);
+      }
     } catch (error) {
-      res.status(400).json({ error: 'Failed to fetch user by email' });
+      console.error('Error checking email:', error);
+      res.sendStatus(500); 
     }
-  }
+}
+
+
 }

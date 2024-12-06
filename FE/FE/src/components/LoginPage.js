@@ -22,7 +22,7 @@ const Login = () => {
  };
 
  return (
-   <div className="background">
+   <div className="backgroundSignUp">
      <h1></h1>
      <form onSubmit={handleSubmit}>
        <div className="form-group">

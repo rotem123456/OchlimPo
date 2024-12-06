@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import "./Loginpage.css";
 
 
 const SignUp = () => {
@@ -12,11 +12,44 @@ const SignUp = () => {
   const navigate = useNavigate();
   const BEpath = "http://localhost:4000";
 
+
+  const handleTypeSelect = (selectedType) => {
+    setType(selectedType);
+  };
+
   const checkPasswordsMatch = (pass1, pass2) => {
-    if (pass1 === pass2) {
-      alert("Passwords match");
-    } else {
-      alert("Passwords don't match");
+   if(pass1==="")
+   {
+      alert("PassWord cant be null")
+      return;
+   }
+   if(pass1===pass2)
+   {
+    alert("Passwords Match")
+   }
+   else{
+    alert("Passwords dont Match!")
+   }
+  };
+
+  const emailCheck = async (email) => {
+    try {
+      const response = await fetch(`${BEpath}/user/email/${email}`, {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      });
+      
+      if(response.status === 404) {
+        alert("Email is Valid");
+      }
+      if(response.status === 201) {
+        alert("Email is already used");
+      }
+    } catch (error) {
+      console.log(error, "error checking email");
     }
   };
 
@@ -31,97 +64,216 @@ const SignUp = () => {
     try {
       const response = await fetch(`${BEpath}/user/create`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify({ email, name, password, type })
       });
+      
       if (response.ok) {
-        addUser(name);
-        
-
+        await addUser(name);
       }
     } catch (error) {
       console.error("SignUp Failed", error);
     }
   };
 
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
   return (
-    <div className="background">
-      <div className="plate-content bg-white/90 rounded-3xl p-8 shadow-lg max-w-md w-full mx-auto">
-        <h1 className="title text-2xl mb-4 text-black">Sign Up</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="search-input w-full bg-transparent border-2 border-gray-300 rounded-lg px-4 py-2 text-xl focus:border-gray-500 focus:outline-none"
-              />
-            </div>
-            
-            <div className="relative">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="search-input w-full bg-transparent border-2 border-gray-300 rounded-lg px-4 py-2 text-xl focus:border-gray-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="relative">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="search-input w-full bg-transparent border-2 border-gray-300 rounded-lg px-4 py-2 text-xl focus:border-gray-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="relative">
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                value={password2}
-                onChange={(e) => setPassword2(e.target.value)}
-                required
-                className="search-input w-full bg-transparent border-2 border-gray-300 rounded-lg px-4 py-2 text-xl focus:border-gray-500 focus:outline-none"
-              />
-            </div>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="User Type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                required
-                className="search-input w-full bg-transparent border-2 border-gray-300 rounded-lg px-4 py-2 text-xl focus:border-gray-500 focus:outline-none"
-              />
-            </div>
+    <div className="backgroundSignUp">
+      <div style={{ 
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        width: '600px'  // Make container wider
+      }}>
+        <h1 style={{
+          fontSize: '2.5rem',
+          marginBottom: '20px',
+          alignSelf: 'flex-start'
+        }}>Sign Up</h1>
+        
+        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          <div className="form-group" style={{ marginBottom: '15px' }}>
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              style={{ 
+                width: '100%',
+                height: '45px',
+                fontSize: '1.1rem',
+                padding: '0 15px'
+              }}
+            />
+          </div>
+          
+          <div className="form-group" style={{ 
+            display: 'flex', 
+            gap: '10px', 
+            alignItems: 'center',
+            marginBottom: '15px'
+          }}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              style={{ 
+                flex: 1,
+                height: '45px',
+                fontSize: '1.1rem',
+                padding: '0 15px'
+              }}
+            />
+            <button 
+              type="button" 
+              onClick={() => emailCheck(email)}
+              style={{ 
+                whiteSpace: 'nowrap',
+                height: '45px',
+                padding: '0 20px'
+              }}
+            >
+              Email Check
+            </button>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="form-group" style={{ marginBottom: '15px' }}>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              style={{ 
+                width: '100%',
+                height: '45px',
+                fontSize: '1.1rem',
+                padding: '0 15px'
+              }}
+            />
+          </div>
+
+          <div className="form-group" style={{ 
+            display: 'flex', 
+            gap: '10px', 
+            alignItems: 'center',
+            marginBottom: '15px'
+          }}>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+              required
+              style={{ 
+                flex: 1,
+                height: '45px',
+                fontSize: '1.1rem',
+                padding: '0 15px'
+              }}
+            />
+            <button 
+              type="button" 
+              onClick={() => checkPasswordsMatch(password, password2)}
+              style={{ 
+                whiteSpace: 'nowrap',
+                height: '45px',
+                padding: '0 20px'
+              }}
+            >
+              Verify Match
+            </button>
+          </div>
+
+          <div style={{ 
+            display: 'flex', 
+            gap: '10px', 
+            marginBottom: '15px',
+            width: '100%'
+          }}>
             <button
               type="button"
-              onClick={() => checkPasswordsMatch(password, password2)}
-              
+              onClick={() => handleTypeSelect('BLOGGER')}
+              style={{ 
+                flex: 1,
+                height: '45px',
+                padding: '0 15px',
+                backgroundColor: type === 'BLOGGER' ? '#e0e0e0' : 'white',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
             >
-              Verify Password Match
+              BLOGGER
             </button>
-
             <button
-              type="submit"
-             
+              type="button"
+              onClick={() => handleTypeSelect('POSTER')}
+              style={{ 
+                flex: 1,
+                height: '45px',
+                padding: '0 15px',
+                backgroundColor: type === 'POSTER' ? '#e0e0e0' : 'white',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
             >
-              Create Account
+              POSTER
+            </button>
+            <button
+              type="button"
+              onClick={() => handleTypeSelect('VIEWER')}
+              style={{ 
+                flex: 1,
+                height: '45px',
+                padding: '0 15px',
+                backgroundColor: type === 'VIEWER' ? '#e0e0e0' : 'white',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              VIEWER
             </button>
           </div>
+
+          <div className="form-group" style={{ marginBottom: '20px' }}>
+            <input
+              type="text"
+              placeholder="User Type"
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              required
+              style={{ 
+                width: '100%',
+                height: '45px',
+                fontSize: '1.1rem',
+                padding: '0 15px',
+                backgroundColor: '#f8f8f8',  // Slightly grayed out to indicate it's set by buttons
+                cursor: 'default'
+              }}
+              readOnly  // Make it read-only since it's set by buttons
+            />
+          </div>
+
+          <button 
+            type="submit"
+            style={{ 
+              width: '100%',
+              height: '45px',
+              fontSize: '1.1rem'
+            }}
+          >
+            Create Account
+          </button>
         </form>
       </div>
     </div>
