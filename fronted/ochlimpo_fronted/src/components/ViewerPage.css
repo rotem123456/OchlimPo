@@ -1,0 +1,44 @@
+.viewer-page {
+    background-color: #f7f7f7;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  .viewer-title {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .recipes-section {
+    margin-top: 20px;
+  }
+  
+  .recipe-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .like-button,
+  .save-button {
+    margin: 5px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .like-button {
+    background-color: #ff6b6b;
+    color: white;
+  }
+  
+  .save-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  

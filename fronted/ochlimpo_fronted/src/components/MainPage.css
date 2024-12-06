@@ -1,170 +1,184 @@
 /* Background styles */
 .background {
-    background-image: url("../../public/images/background_2.webp");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  /* PlateContent styles */
-  .plate-content {
-    width: 300px;
-    height: 500px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(20px); /* Adjust left alignment */
-  }
-  
-  /* Title styles */
-  .title {
-    font-family: "Just Another Hand", cursive;
-    font-weight: 400;
-    font-size: 2.5rem;
-    font-style: normal;
-  }
-  
-  /* Search Box styles */
-  .search-box {
-    position: absolute;
-    top: 25%; /* Adjust the position relative to the top */
-    right: 10%;
-    transform: translateY(-340%);
-    width: 100%;
-    max-width: 400px; /* Optional: Limit the width */
-  }
-  
-  .search-input {
-    width: 100%;
-    font-family: "Just Another Hand", cursive;
-    padding: 15px 40px; /* Space for the magnifying glass */
-    font-size: 1.5rem;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  
-  .search-input:focus {
-    border-color: #e1930a;
-  }
-  
-  .magnifying-glass-button {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #888;
-  }
-  
-  /* Button styles */
-  .button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-family: "Just Another Hand", cursive;
-    font-size: 2rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #e1930a;
-    background-color: #c7bda726;
-    box-shadow: 0 2px 5px rgba(138, 139, 139, 0.2);
-    transition: all 0.3s ease;
-  }
-  
-  .button:hover {
-    background-color: #bdb7aa26;
-  }
-  
+  background-image: url("../../public/images/background_2.webp");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Top-right Login and Sign-up buttons */
+.top-right-buttons {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.signup-button,
+.login-button {
+  font-family: Arial, sans-serif;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #181818;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signup-button:hover {
+  background-color: #3a3a3a;
+}
+
+.login-button {
+  background-color: #fff;
+  color: #000;
+}
+
+.login-button:hover {
+  background-color: #ddd;
+}
+
+/* PlateContent styles */
+.plate-content {
+  width: 300px;
+  height: 500px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(20px);
+}
+
+/* Title styles */
+.title {
+  font-family: "Just Another Hand", cursive;
+  font-weight: 400;
+  font-size: 2.5rem;
+}
+
+/* Text on the plate */
+.plate-text {
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Search Box styles */
+.search-box {
+  position: absolute;
+  top:15%;
+  right: 10%;
+  transform: translateY(-340%);
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  padding: 15px 50px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #e1930a;
+}
+
+.magnifying-glass-button {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+
 /* My Profile Rectangle */
 .my-profile {
-    position: absolute;
-    top: 10%; /* Adjust top alignment */
-    left: 10px; /* Adjust left alignment */
-    width: 250px; /* Reduced width */
-    max-height: 300px; /* Constrained height */
-    background-color: #181818;
-    border-radius: 10px;
-    padding: 15px;
-    overflow-y: auto; /* Enable vertical scrolling */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    color: #fff;
-  }
-  
-  /* Title for the My Profile section */
-  .profile-title {
-    font-size: 1.3rem; /* Slightly smaller font size */
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  /* Profile sections */
-  .profile-section {
-    margin-bottom: 15px;
-  }
-  
-  /* Section headers (e.g., My Recipes, My List of Bloggers, My List of Restaurants) */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .section-header h3 {
-    font-size: 1rem; /* Adjusted font size */
-    font-weight: bold;
-    margin: 0;
-  }
-  
-  .add-button {
-    background-color: #ff6b6b;
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.1rem;
-    width: 25px;
-    height: 25px; /* Smaller button size */
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-  
-  .add-button:hover {
-    background-color: #ff3b3b;
-  }
-  
-  /* Section content */
-  .section-content {
-    background-color: #282828;
-    padding: 10px;
-    border-radius: 8px;
-    min-height: 50px;
-    color: #ccc;
-    font-size: 0.8rem; /* Smaller font size */
-    overflow-y: auto; /* Additional scrolling within each section if needed */
-    max-height: 150px; /* Limit individual section height */
-  }
-  
-  .section-content p {
-    margin: 5px 0;
-    font-size: 0.8rem; /* Adjusted font size */
-    color: #ccc;
-  }  
-  
-  
+  position: absolute;
+  top: 10%; /* Adjust top alignment */
+  left: 10px; /* Adjust left alignment */
+  width: 250px; /* Reduced width */
+  max-height: 300px; /* Constrained height */
+  background-color: #181818;
+  border-radius: 10px;
+  padding: 15px;
+  overflow-y: hidden; /* Hide scrollbar by default */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  transition: overflow-y 0.3s ease; /* Smooth transition */
+}
+
+.my-profile:hover {
+  overflow-y: auto; /* Show scrollbar on hover */
+}
+
+/* Style for the scrollbar */
+.my-profile::-webkit-scrollbar {
+  width: 6px; /* Set scrollbar width */
+}
+
+.my-profile::-webkit-scrollbar-thumb {
+  background-color: #888; /* Scrollbar color */
+  border-radius: 10px; /* Rounded scrollbar */
+}
+
+.my-profile::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Darker color on hover */
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
