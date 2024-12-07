@@ -34,6 +34,9 @@ const App = () => {
           <Route path="/viewer" element={<ViewerPage />} />
           <Route path="/blogger" element={<BloggerPage />} />
           <Route path="/admin" element={<AdminPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          
         </Routes>
       </div>
     </Router>
