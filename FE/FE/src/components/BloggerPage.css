@@ -1,0 +1,27 @@
+.blogger-page {
+    background-color: #f7f7f7;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  .blogger-title {
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .upload-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .uploaded-recipes {
+    margin-top: 20px;
+    text-align: left;
+  }
+  

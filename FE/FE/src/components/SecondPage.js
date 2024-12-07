@@ -3,26 +3,25 @@ import "./SecondPage.css";
 
 const SecondPage = () => {
   const [recipes] = useState([
-    { id: 1, name: "Spaghetti", image: "/images/spaghetti.jpg" },
-    { id: 2, name: "Pizza", image: "/images/pizza.jpg" },
-    { id: 3, name: "Salad", image: "/images/salad.jpg" },
+    { id: 1, name: "Spaghetti", image: "\\images\\spaghetti.jpg" },
+    { id: 2, name: "Pizza", image: "\\images\\pizza.jpg" },
+    { id: 3, name: "Salad", image: "\\images\\salad.jpg" },
   ]);
 
   const [bloggers] = useState([
-    { id: 1, name: "John Doe", image: "/images/john.jpg" },
-    { id: 2, name: "Jane Smith", image: "/images/jane.jpg" },
-    { id: 3, name: "Chef Alex", image: "/images/alex.jpg" },
+    { id: 1, name: "John Doe", image: "\\images\\john.jpg" },
+    { id: 2, name: "Jane Smith", image: "\\images\\jane.jpg" },
+    { id: 3, name: "Chef Alex", image: "\\images\\alex.jpg" },
   ]);
 
   const [restaurants] = useState([
-    { id: 1, name: "Italian Bistro", image: "/images/bistro.jpg" },
-    { id: 2, name: "Sushi World", image: "/images/sushi.jpg" },
-    { id: 3, name: "BBQ Heaven", image: "/images/bbq.jpg" },
+    { id: 1, name: "Italian Bistro", image: "\\images\\bistro.jpg" },
+    { id: 2, name: "Sushi World", image: "\\images\\sushi.jpg" },
+    { id: 3, name: "BBQ Heaven", image: "\\images\\bbq.jpg" },
   ]);
 
   return (
     <div className="second-page">
-      {/* <h1 className="title">Welcome to the Second Page</h1> */}
       <div className="scrolling-rectangle">
         {/* Popular Recipes */}
         <div className="row">

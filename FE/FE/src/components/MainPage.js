@@ -7,40 +7,49 @@ const MainPage = () => {
   const [recipes, setRecipes] = useState([]);
   const [bloggers, setBloggers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
-  const addRecipe = () => {
-    alert("Add recipe clicked");
+  const openModal = () => {
+    setShowModal(true);
   };
 
-  const addBlogger = () => {
-    alert("Add blogger clicked");
-  };
-
-  const addRestaurant = () => {
-    alert("Add restaurant clicked");
+  const closeModal = (event) => {
+    if (event.target.className === "modal-overlay") {
+      setShowModal(false);
+    }
   };
 
   return (
     <div className="background">
+      {/* Top-right Login and Sign-up buttons */}
+      <div className="top-right-buttons">
+        <button className="signup-button">Sign up</button>
+        <button className="login-button">Log in</button>
+      </div>
+
       {/* Left rectangle - My Profile */}
       <div className="my-profile">
         <h2 className="profile-title">My Profile</h2>
-        
+
         {/* My Recipes Section */}
         <div className="profile-section">
           <div className="section-header">
             <h3>My Recipes</h3>
-            <button className="add-button" onClick={addRecipe}>
+            <button className="add-button" onClick={openModal}>
               +
             </button>
           </div>
           <div className="section-content">
-            {recipes.length === 0 ? <p>No recipes yet</p> : recipes.map((recipe, index) => <p key={index}>{recipe}</p>)}
+            {recipes.length === 0 ? (
+              <p>No recipes yet</p>
+            ) : (
+              recipes.map((recipe, index) => <p key={index}>{recipe}</p>)
+            )}
           </div>
         </div>
 
@@ -48,12 +57,16 @@ const MainPage = () => {
         <div className="profile-section">
           <div className="section-header">
             <h3>My List of Bloggers</h3>
-            <button className="add-button" onClick={addBlogger}>
+            <button className="add-button" onClick={openModal}>
               +
             </button>
           </div>
           <div className="section-content">
-            {bloggers.length === 0 ? <p>No bloggers yet</p> : bloggers.map((blogger, index) => <p key={index}>{blogger}</p>)}
+            {bloggers.length === 0 ? (
+              <p>No bloggers yet</p>
+            ) : (
+              bloggers.map((blogger, index) => <p key={index}>{blogger}</p>)
+            )}
           </div>
         </div>
 
@@ -61,12 +74,18 @@ const MainPage = () => {
         <div className="profile-section">
           <div className="section-header">
             <h3>My List of Restaurants</h3>
-            <button className="add-button" onClick={addRestaurant}>
+            <button className="add-button" onClick={openModal}>
               +
             </button>
           </div>
           <div className="section-content">
-            {restaurants.length === 0 ? <p>No restaurants yet</p> : restaurants.map((restaurant, index) => <p key={index}>{restaurant}</p>)}
+            {restaurants.length === 0 ? (
+              <p>No restaurants yet</p>
+            ) : (
+              restaurants.map((restaurant, index) => (
+                <p key={index}>{restaurant}</p>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -74,6 +93,10 @@ const MainPage = () => {
       {/* Centered plate content */}
       <div className="plate-content">
         <h1 className="title">OchlimPo</h1>
+        <p className="plate-text">
+          Welcome to OchlimPo, your hub for discovering and sharing amazing
+          recipes!
+        </p>
 
         {/* Search Box */}
         <div className="search-box">
@@ -85,15 +108,32 @@ const MainPage = () => {
           <input
             type="text"
             className="search-input"
-            placeholder={inputValue ? "" : "Search for recipes..."}
+            placeholder="Search for recipes..."
             value={inputValue}
             onChange={handleInputChange}
           />
         </div>
-
-        <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
-        <button className = "button" onClick={() => navigate('/login')}>Sign In</button>
       </div>
+      <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
+      <button className = "button" onClick={() => navigate('/login')}>Sign In</button>
+      {/* Modal for Sign In/Sign Up */}
+      {showModal && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content">
+            <h2>Welcome to OchlimPo</h2>
+            <p>
+              Please sign in if you already have an account, or sign up if
+              you're new!
+            </p>
+            <button className="button" onClick={() => setShowModal(false)}>
+              Sign In
+            </button>
+            <button className="button" onClick={() => setShowModal(false)}>
+              Sign Up
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
