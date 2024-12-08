@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import {hashSync} from 'bcrypt';
+import {hashSync,compare} from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -63,6 +63,32 @@ export const userController = {
       console.error('Error checking email:', error);
       res.sendStatus(500); 
     }
+},
+LoginLogic: async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Find the user
+    const user = await prisma.user.findUnique({
+      where: { email: email },
+    });
+
+    // If no user found, return unauthorized
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    const isValidPassword = await compare(password, user.password);
+    
+    if (isValidPassword) {
+      return res.status(200).json({ message: 'Login successful' });
+    } else {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 
