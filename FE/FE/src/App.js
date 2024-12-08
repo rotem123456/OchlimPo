@@ -30,12 +30,6 @@ const App = () => {
           <Link to="/admin" style={{ marginRight: "15px" }}>
             Admin
           </Link>
-          <Link to="/login" style={{ marginRight: "15px" }}>
-            Login
-          </Link>
-          <Link to="/signup">
-            Sign Up
-          </Link>
         </nav>
 
         {/* Page Routes */}

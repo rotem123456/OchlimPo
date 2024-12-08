@@ -28,8 +28,8 @@ const MainPage = () => {
     <div className="background">
       {/* Top-right Login and Sign-up buttons */}
       <div className="top-right-buttons">
-        <button className="signup-button">Sign up</button>
-        <button className="login-button">Log in</button>
+        <button onClick={() => navigate('/signup')} className="signup-button">Sign up</button>
+        <button onClick={() => navigate('/login')} className="login-button">Log in</button>
       </div>
 
       {/* Left rectangle - My Profile */}
@@ -114,8 +114,6 @@ const MainPage = () => {
           />
         </div>
       </div>
-      <button className="button" onClick={() => navigate('/signup')}>Sign Up</button>
-      <button className = "button" onClick={() => navigate('/login')}>Sign In</button>
       {/* Modal for Sign In/Sign Up */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
