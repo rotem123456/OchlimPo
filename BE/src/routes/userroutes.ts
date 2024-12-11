@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/create', userController.createUser);
 router.post('/login',userController.LoginLogic)
-router.get('/email/:email/:password', userController.getUserByMail);
+router.get('/email/:email', userController.getUserByMail);
 router.get('/:id',userController.getUser);
 
 export default router;
