@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';  // Import useAuth
 import "./MainPage.css";
 
 const MainPage = () => {
@@ -9,6 +10,14 @@ const MainPage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const user = useAuth();
+  let state =  false;
+  if (user) {
+    console.log("Logged in user:", user);
+    state = true;
+  }
+
+
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);

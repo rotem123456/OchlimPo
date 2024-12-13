@@ -1,95 +1,154 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import {hashSync,compare} from 'bcrypt';
+import { hashSync, compare } from 'bcrypt';
+import { generateToken } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
 export const userController = {
   createUser: async (req: Request, res: Response) => {
     try {
-       
       const { email, name, password, type } = req.body;
-      const hashedPassword = hashSync(password,10);
+
+      const existingUser = await prisma.user.findUnique({
+        where: { email }
+      });
+
+      if (existingUser) {
+        return res.status(400).json({ error: 'User with this email already exists' });
+      }
+
+      const hashedPassword = hashSync(password, 10);
+      
       const user = await prisma.user.create({
         data: {
           email,
           name,
           password: hashedPassword,
-          type
+          type,
+        },
+      });
+
+      const token = generateToken({ 
+        id: user.id, 
+        email: user.email 
+      });
+
+      res.status(201).json({
+        message: 'User created successfully',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          type: user.type
         }
       });
-      res.status(201).json(user);
     } catch (error) {
+      console.error('Error creating user:', error);
       res.status(400).json({ error: 'Failed to create user' });
     }
   },
 
-  getUser: async(req:Request, res: Response) => {
+  getUser: async (req: Request, res: Response) => {
     try {
-        const {id} = req.params;
-        console.log(Number(id))
-        const user = await prisma.user.findUnique({
-            where: { id: Number(id) },
-        });
-        console.log('Found user:', user);
-        if(!user)
-        {
-            return res.status(404).json({ error: 'User not found' });
+      const { id } = req.params;
+      const userId = Number(id);
+
+      if (isNaN(userId)) {
+        return res.status(400).json({ error: 'Invalid user ID format' });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          type: true,
         }
-        res.json(user);
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.json(user);
     } catch (error) {
-        console.error('Error:', error); // Debug log
-        res.status(400).json({ error: 'Failed to fetch user' });
+      console.error('Error fetching user:', error);
+      res.status(500).json({ error: 'Failed to fetch user' });
     }
   },
 
   getUserByMail: async (req: Request, res: Response) => {
     try {
       const { email } = req.params;
-      console.log('Checking email:', email);
-      
+
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required' });
+      }
+
       const user = await prisma.user.findUnique({
-        where: { email: email }
+        where: { email },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          type: true,
+        }
       });
-      
+
       if (user) {
-        console.log('Found user with email', email);
-        res.sendStatus(201); 
+        res.status(200).json(user);
       } else {
-        console.log('No user found with email', email);
-        res.sendStatus(404);
+        res.status(404).json({ error: 'User not found' });
       }
     } catch (error) {
       console.error('Error checking email:', error);
-      res.sendStatus(500); 
+      res.status(500).json({ error: 'Internal server error' });
     }
-},
-LoginLogic: async (req: Request, res: Response) => {
-  try {
-    const { email, password } = req.body;
-    
-    // Find the user
-    const user = await prisma.user.findUnique({
-      where: { email: email },
-    });
+  },
 
-    // If no user found, return unauthorized
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    const isValidPassword = await compare(password, user.password);
-    
-    if (isValidPassword) {
-      return res.status(200).json({ message: 'Login successful' });
-    } else {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
+  login: async (req: Request, res: Response) => {
+    try {
+      const { email, password } = req.body;
 
-  } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { email }
+      });
+
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      const isValidPassword = await compare(password, user.password);
+
+      if (!isValidPassword) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      const token = generateToken({ 
+        id: user.id, 
+        email: user.email 
+      });
+
+      return res.status(200).json({
+        message: 'Login successful',
+        token,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          type: user.type
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
-}
-
-
-}
+};

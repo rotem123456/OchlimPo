@@ -1,14 +1,19 @@
+// src/components/Login.jsx
 import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import "./Loginpage.css";
+import { useNavigate } from "react-router-dom";
 
 const BEpath = "http://localhost:4000/";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     
     try {
       const response = await fetch(`${BEpath}user/login`, {
@@ -18,14 +23,17 @@ const Login = () => {
           "Accept": "application/json"
         },
         body: JSON.stringify({
-          email: email,
-          password: password
+          email,
+          password
         })
       });
 
+      const data = await response.json();
+     
       if (response.status === 200) {
-        alert("Welcome!");
-        console.log("passwords are equal");
+        console.log(data)
+        login(data.user, data.token);
+        navigate('/')
       } else if (response.status === 401) {
         alert("Incorrect username or password");
       } else {
