@@ -44,6 +44,10 @@ const Navigation = () => {
         </>
       ) : (
         <>
+          {/*FOR DEBUGGING uncomment */}
+          {/* <Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>
+          <Link to="/blogger" style={{ marginRight: "15px" }}>Blogger</Link>
+          <Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link> */}
           <Link to="/login" style={{ marginRight: "15px" }}>Login</Link>
           <Link to="/signup" style={{ marginRight: "15px" }}>Sign Up</Link>
         </>

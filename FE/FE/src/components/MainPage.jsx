@@ -13,14 +13,6 @@ const MainPage = () => {
   const {user,logout} = useAuth();
   let state =  false;
   
-  
-  if (user) {
-    console.log("Logged in user:", user);
-    state = true;
-  }
-
-
-
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -42,11 +34,11 @@ const MainPage = () => {
   {user ? (
     <>
       <span className="user-name">Welcome, {user.name}!</span>
-      <button onClick={logout} className="logout-button">Logout</button>
+      <button onClick={logout} className="login-button">Logout</button>
     </>
   ) : (
     <>
-      <button onClick={() => navigate('/signup')} className="signup-button">Sign up</button>
+      <button onClick={() => navigate('/signup')} className="login-button">Sign up</button>
       <button onClick={() => navigate('/login')} className="login-button">Log in</button>
     </>
   )}
