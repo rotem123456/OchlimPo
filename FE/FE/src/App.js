@@ -15,7 +15,6 @@ const ProtectedRoute = ({ element: Element, allowedRoles, ...rest }) => {
   const { user } = useAuth();
 
   if (!user) {
-    // Redirect to login if not authenticated
     return <Navigate to="/login" replace />;
   }
 
@@ -36,14 +35,12 @@ const Navigation = () => {
       
       {user ? (
         <>
-          <Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>
-          {(user.type === 'BLOGGER' || user.type === 'ADMIN') && (
-            <Link to="/blogger" style={{ marginRight: "15px" }}>Blogger</Link>
-          )}
-          {user.type === 'ADMIN' && (
-            <Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link>
-          )}
-          <button onClick={logout} style={{ marginLeft: "15px" }}>Logout</button>
+          {(user.type === 'VIEWER') && (<Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>)}
+          
+          {(user.type === 'BLOGGER') && (<Link to="/blogger" style={{ marginRight: "15px" }}>Blogger</Link>)}
+
+          {user.type === 'POSTER' && (<Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link> )}
+
         </>
       ) : (
         <>

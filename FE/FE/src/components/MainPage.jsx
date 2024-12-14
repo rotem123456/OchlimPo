@@ -10,8 +10,10 @@ const MainPage = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const user = useAuth();
+  const {user,logout} = useAuth();
   let state =  false;
+  
+  
   if (user) {
     console.log("Logged in user:", user);
     state = true;
@@ -37,9 +39,18 @@ const MainPage = () => {
     <div className="background">
       {/* Top-right Login and Sign-up buttons */}
       <div className="top-right-buttons">
-        <button onClick={() => navigate('/signup')} className="signup-button">Sign up</button>
-        <button onClick={() => navigate('/login')} className="login-button">Log in</button>
-      </div>
+  {user ? (
+    <>
+      <span className="user-name">Welcome, {user.name}!</span>
+      <button onClick={logout} className="logout-button">Logout</button>
+    </>
+  ) : (
+    <>
+      <button onClick={() => navigate('/signup')} className="signup-button">Sign up</button>
+      <button onClick={() => navigate('/login')} className="login-button">Log in</button>
+    </>
+  )}
+</div>
 
       {/* Left rectangle - My Profile */}
       <div className="my-profile">
