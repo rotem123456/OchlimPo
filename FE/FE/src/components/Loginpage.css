@@ -1,5 +1,5 @@
 .backgroundLogin {
-    background-image: url("../../public/images/background_2.webp");
+    background-image: url("../../public/images/loginBackground.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -22,4 +22,101 @@
     text-align: center;
   }
 
+  .login-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 40px auto;
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Style for input fields */
+  .login-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: white;
+  }
+  
+  .login-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.1);
+  }
+  
+  /* Login button style */
+  .login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+  }
+  
+  .login-button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+  }
+  
+  /* Sign up link style */
+  .signup-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .signup-link a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+    transition: color 0.3s ease;
+  }
+  
+  .signup-link a:hover {
+    color: #357abd;
+    text-decoration: underline;
+  }
+
+  input {
+    width: 100%;
+    padding: 15px 20px;    /* Increased padding */
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 18px;       /* Larger font size */
+    transition: all 0.3s ease;
+    background-color: white;
+    min-width: 300px;      /* Minimum width */
+    box-sizing: border-box; /* Ensures padding doesn't add to width */
+  }
+  
+  form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 40px;         /* Increased padding */
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 450px;      /* Increased max-width */
+    width: 90%;
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Make the placeholder text larger too */
+  input::placeholder {
+    font-size: 18px;
+    color: #999;
+  }
   

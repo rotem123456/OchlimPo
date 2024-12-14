@@ -1,8 +1,5 @@
 # OchlimPo
 
-A platform to simplify and streamline your project development experience.
-
----
 
 ## Prerequisites
 
