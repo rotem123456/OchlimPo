@@ -45,9 +45,9 @@ const Navigation = () => {
       ) : (
         <>
           {/*FOR DEBUGGING uncomment */}
-          {/* <Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>
+          <Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>
           <Link to="/blogger" style={{ marginRight: "15px" }}>Blogger</Link>
-          <Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link> */}
+          <Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link>
           <Link to="/login" style={{ marginRight: "15px" }}>Login</Link>
           <Link to="/signup" style={{ marginRight: "15px" }}>Sign Up</Link>
         </>
@@ -63,6 +63,10 @@ const AppRoutes = () => {
       <Route path="/second" element={<SecondPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/viewer" element={<ViewerPage />} />
+      <Route path="/blogger" element={<BloggerPage />} />
+      <Route path="/admin" element={<AdminPage />} />
+
       
       {/* Protected Routes */}
       <Route 
