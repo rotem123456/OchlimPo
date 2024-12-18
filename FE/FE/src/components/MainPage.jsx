@@ -153,64 +153,41 @@ React.useEffect(() => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
+        </div>
 
-<button
-        className="advanced-search-toggle"
-        onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-      >
-        {advancedSearchOpen ? "Close Advanced Search" : "Open Advanced Search"}
-      </button>
-      {advancedSearchOpen && (
-        <div className="advanced-search-menu">
-          <div className="filter">
-            <label>Max Time to Make (mins):</label>
-            <input
-              type="range"
-              min="5"
-              max="120"
-              value={timeToMake}
-              onChange={(e) => setTimeToMake(Number(e.target.value))}
-            />
-            <span>{timeToMake} mins</span>
-          </div>
-          <div className="filter">
-            <label>Ingredient:</label>
-            <input
-              type="text"
-              placeholder="e.g., cheese"
-              value={ingredients}
-              onChange={(e) => setIngredients(e.target.value)}
-            />
-          </div>
-          <div className="filter">
-            <label>Tags:</label>
-            <input
-              type="text"
-              placeholder="e.g., dinner, lunch"
-              value={tags}
-              onChange={(e) =>
-                setTags(e.target.value.split(",").map((tag) => tag.trim()))
-              }
-            />
-          </div>
-          <button className="search-button" onClick={handleSearch}>
-            Search
-          </button>
-        </div>
-      )}
-      <div className="search-results">
-        {searchResults.length > 0 ? (
-          searchResults.map((recipe, index) => (
-            <div key={index} className="recipe-item">
-              <h3>{recipe.title}</h3>
-              <p>Time: {recipe.time} mins</p>
-              <p>Tags: {recipe.tags.join(", ")}</p>
+        <button
+          className="advanced-search-toggle"
+          onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
+        >
+          {advancedSearchOpen ? "Close Advanced Search" : "Open Advanced Search"}
+        </button>
+        {advancedSearchOpen && (
+          <div className="advanced-search-menu">
+            <div className="filter">
+              <label>Max Time to Make (mins):</label>
+              <input
+                type="range"
+                min="5"
+                max="120"
+                value={timeToMake}
+                onChange={(e) => setTimeToMake(Number(e.target.value))}
+              />
+              <span>{timeToMake} mins</span>
             </div>
-          ))
-        ) : (
-          <p>No recipes found. Try another search!</p>
+          </div>
         )}
-        </div>
+        <div className="search-results">
+          {searchResults.length > 0 ? (
+            searchResults.map((recipe, index) => (
+              <div key={index} className="recipe-item">
+                <h3>{recipe.title}</h3>
+                <p>Time: {recipe.time} mins</p>
+                <p>Tags: {recipe.tags.join(", ")}</p>
+              </div>
+            ))
+          ) : (
+            <p>No recipes found. Try another search!</p>
+          )}
         </div>
       </div>
 
