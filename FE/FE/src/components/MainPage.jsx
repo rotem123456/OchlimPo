@@ -4,7 +4,15 @@ import { useAuth } from '../context/AuthContext';  // Import useAuth
 import "./MainPage.css";
 
 const MainPage = () => {
+  // Search values
   const [inputValue, setInputValue] = useState("");
+  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
+  const [searchResults, setResults] = useState([]);
+  const [timeToMake, setTimeToMake] = useState(60);
+  const [ingredients, setIngredients] = useState("");
+  const [tags, setTags] = useState([]);
+
+  // Other things in page
   const [recipes, setRecipes] = useState([]);
   const [bloggers, setBloggers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -12,10 +20,38 @@ const MainPage = () => {
   const navigate = useNavigate();
   const {user,logout} = useAuth();
   let state =  false;
-  
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+
+ // Handle advanced search
+ const handleSearch = async () => {
+  try {
+    const response = await fetch("http://localhost:4000/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputValue,
+        maxTime: timeToMake,
+        ingredients,
+        tags,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch search results");
+
+    const data = await response.json();
+    console.log("Advanced search results:", data);
+    setResults(data);
+  } catch (error) {
+    console.error("Advanced search error:", error);
+    setResults([]);
+  }
+};
+
+// Call search directly when query changes
+React.useEffect(() => {
+  handleSearch();
+}, [inputValue]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -102,14 +138,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* Centered plate content */}
-      <div className="plate-content">
-        <h1 className="title">OchlimPo</h1>
-        <p className="plate-text">
-          Welcome to OchlimPo, your hub for discovering and sharing amazing
-          recipes!
-        </p>
-
+      <div className="search-container">
         {/* Search Box */}
         <div className="search-box">
           <button className="magnifying-glass-button">
@@ -122,9 +151,76 @@ const MainPage = () => {
             className="search-input"
             placeholder="Search for recipes..."
             value={inputValue}
-            onChange={handleInputChange}
+            onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
+
+<button
+        className="advanced-search-toggle"
+        onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
+      >
+        {advancedSearchOpen ? "Close Advanced Search" : "Open Advanced Search"}
+      </button>
+      {advancedSearchOpen && (
+        <div className="advanced-search-menu">
+          <div className="filter">
+            <label>Max Time to Make (mins):</label>
+            <input
+              type="range"
+              min="5"
+              max="120"
+              value={timeToMake}
+              onChange={(e) => setTimeToMake(Number(e.target.value))}
+            />
+            <span>{timeToMake} mins</span>
+          </div>
+          <div className="filter">
+            <label>Ingredient:</label>
+            <input
+              type="text"
+              placeholder="e.g., cheese"
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+            />
+          </div>
+          <div className="filter">
+            <label>Tags:</label>
+            <input
+              type="text"
+              placeholder="e.g., dinner, lunch"
+              value={tags}
+              onChange={(e) =>
+                setTags(e.target.value.split(",").map((tag) => tag.trim()))
+              }
+            />
+          </div>
+          <button className="search-button" onClick={handleSearch}>
+            Search
+          </button>
         </div>
+      )}
+      <div className="search-results">
+        {searchResults.length > 0 ? (
+          searchResults.map((recipe, index) => (
+            <div key={index} className="recipe-item">
+              <h3>{recipe.title}</h3>
+              <p>Time: {recipe.time} mins</p>
+              <p>Tags: {recipe.tags.join(", ")}</p>
+            </div>
+          ))
+        ) : (
+          <p>No recipes found. Try another search!</p>
+        )}
+        </div>
+        </div>
+      </div>
+
+      {/* Centered plate content */}
+      <div className="plate-content">
+        <h1 className="title">OchlimPo</h1>
+        <p className="plate-text">
+          Welcome to OchlimPo, your hub for discovering and sharing amazing
+          recipes!
+        </p>
       </div>
       {/* Modal for Sign In/Sign Up */}
       {showModal && (

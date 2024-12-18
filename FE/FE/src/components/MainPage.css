@@ -84,11 +84,14 @@
 /* Search Box styles */
 .search-box {
   position: absolute;
-  top:15%;
-  right: 10%;
-  transform: translateY(-340%);
-  width: 100%;
-  max-width: 400px;
+  top: 10%;
+  width: 180%;
+  max-width: 600px;
+}
+
+.search-container {
+  position: center;
+  margin-bottom: 20px;
 }
 
 .search-input {
