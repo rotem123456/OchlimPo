@@ -61,6 +61,19 @@ export const recipecontrollers = {
         } catch (error) {
             
         }
+    },
+
+    getRecipeByUserQuery: async (req:Request, res: Response) => {
+        try {
+            const {query} = req.body
+            const recipe = await prisma.recipe.findMany({
+                where: { name: { contains: query, mode: "insensitive" } }
+                })
+            console.log("Found recipe ", recipe)
+            res.json(recipe);
+
+        } catch (error) {
+            res.status(400).json({ error: 'Failed to get recipes from query' });
+        }
     }
-    
 }

@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';  // Import useAuth
 import "./MainPage.css";
 
+const BEpath = "http://localhost:4000";
+
 const MainPage = () => {
   // Search values
   const [inputValue, setInputValue] = useState("");
-  const [advancedSearchOpen, setAdvancedSearchOpen] = useState(false);
   const [searchResults, setResults] = useState([]);
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
@@ -23,8 +24,10 @@ const MainPage = () => {
 
  // Handle advanced search
  const handleSearch = async () => {
+  if (inputValue.length == 0) return;
+
   try {
-    const response = await fetch("http://localhost:4000/search", {
+    const response = await fetch(`${BEpath}/recipe/search`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,14 +35,12 @@ const MainPage = () => {
       body: JSON.stringify({
         inputValue,
         maxTime: timeToMake,
-        ingredients,
-        tags,
       }),
     });
 
-    if (!response.ok) throw new Error("Failed to fetch search results");
+    //if (!response.ok) alert(`Failed to fetch search results ${response.status}`);
 
-    const data = await response.json();
+    const data = [{name: "asfasf"}]//await response.json();
     console.log("Advanced search results:", data);
     setResults(data);
   } catch (error) {
@@ -61,6 +62,118 @@ React.useEffect(() => {
     if (event.target.className === "modal-overlay") {
       setShowModal(false);
     }
+  };
+
+  const TimeSliderBox = () => {
+    const [isBoxOpen, setIsBoxOpen] = useState(false);
+    const [timeToMake, setTimeToMake] = useState(0);
+  
+    const toggleBox = () => {
+      setIsBoxOpen(!isBoxOpen);
+    };
+  
+    const handleSliderChange = (event) => {
+      setTimeToMake(event.target.value);
+    };
+  
+    return (
+      <div style={{
+          position: "relative",
+          left: "-22%"
+         }}>
+        <button onClick={toggleBox}>
+          {isBoxOpen ? "Maximum Time" : "Maximum Time"}
+        </button>
+        {isBoxOpen && (
+          <div
+          style={{
+            marginTop: "10px",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            position: "absolute",
+            backgroundColor: "white"
+          }}
+          >
+            <label htmlFor="timeSlider">Time to Make: {timeToMake}</label>
+            <input
+              id="timeSlider"
+              type="range"
+              min="0"
+              max="100"
+              value={timeToMake}
+              onChange={handleSliderChange}
+              style={{ width: "80%" }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
+  const TagsDropdownBox = () => {
+    const [isBoxOpen, setIsBoxOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
+  
+    const toggleBox = () => {
+      setIsBoxOpen(!isBoxOpen);
+    };
+  
+    const handleSelectionChange = (event) => {
+      setSelectedOption(event.target.value);
+    };
+  
+    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"]; // Enum-like options
+  
+    return (
+      <div style={{
+        position: "relative",
+        left: "1%",
+        top: "-21px",
+        pointerEvents: "none"
+       }}>
+        <button style={{
+        pointerEvents: "auto"
+       }} onClick={toggleBox}>
+          {isBoxOpen ? "Tags" : "Tags"}
+        </button>
+        {isBoxOpen && (
+          <div
+            style={{
+              marginTop: "10px",
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              width: "200px",
+              position: "relative",
+              left: "100px",
+              backgroundColor: "white",
+              pointerEvents: "auto"
+            }}
+          >
+            <label htmlFor="dropdown" style={{ display: "block", marginBottom: "5px" }}>
+              Select an Option: {selectedOption || "None"}
+            </label>
+            <select
+              id="dropdown"
+              value={selectedOption}
+              onChange={handleSelectionChange}
+              style={{ width: "100%", padding: "5px", pointerEvents: "auto" }}
+            >
+              <option value="" disabled>
+                -- Select an Option --
+              </option>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -154,28 +267,8 @@ React.useEffect(() => {
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
         </div>
-
-        <button
-          className="advanced-search-toggle"
-          onClick={() => setAdvancedSearchOpen(!advancedSearchOpen)}
-        >
-          {advancedSearchOpen ? "Close Advanced Search" : "Open Advanced Search"}
-        </button>
-        {advancedSearchOpen && (
-          <div className="advanced-search-menu">
-            <div className="filter">
-              <label>Max Time to Make (mins):</label>
-              <input
-                type="range"
-                min="5"
-                max="120"
-                value={timeToMake}
-                onChange={(e) => setTimeToMake(Number(e.target.value))}
-              />
-              <span>{timeToMake} mins</span>
-            </div>
-          </div>
-        )}
+        <TimeSliderBox />
+        <TagsDropdownBox />
         <div className="search-results">
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
