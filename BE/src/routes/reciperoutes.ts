@@ -4,6 +4,7 @@ import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 router.post('/create', authenticateToken ,recipecontrollers.createRecipe);
-router.get('/:id',recipecontrollers.getRecipeById);
+router.get('/:id', recipecontrollers.getRecipeById);
+router.post('/search', recipecontrollers.getRecipeByUserQuery);
 
 export default router;

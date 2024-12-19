@@ -3,8 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';  // Import useAuth
 import "./MainPage.css";
 
+const BEpath = "http://localhost:4000";
+
 const MainPage = () => {
+  // Search values
   const [inputValue, setInputValue] = useState("");
+  const [searchResults, setResults] = useState([]);
+  const [timeToMake, setTimeToMake] = useState(60);
+  const [ingredients, setIngredients] = useState("");
+  const [tags, setTags] = useState([]);
+
+  // Other things in page
   const [recipes, setRecipes] = useState([]);
   const [bloggers, setBloggers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -12,10 +21,38 @@ const MainPage = () => {
   const navigate = useNavigate();
   const {user,logout} = useAuth();
   let state =  false;
-  
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
+
+ // Handle advanced search
+ const handleSearch = async () => {
+  if (inputValue.length == 0) return;
+
+  try {
+    const response = await fetch(`${BEpath}/recipe/search`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        inputValue,
+        maxTime: timeToMake,
+      }),
+    });
+
+    //if (!response.ok) alert(`Failed to fetch search results ${response.status}`);
+
+    const data = [{name: "asfasf"}]//await response.json();
+    console.log("Advanced search results:", data);
+    setResults(data);
+  } catch (error) {
+    console.error("Advanced search error:", error);
+    setResults([]);
+  }
+};
+
+// Call search directly when query changes
+React.useEffect(() => {
+  handleSearch();
+}, [inputValue]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -25,6 +62,118 @@ const MainPage = () => {
     if (event.target.className === "modal-overlay") {
       setShowModal(false);
     }
+  };
+
+  const TimeSliderBox = () => {
+    const [isBoxOpen, setIsBoxOpen] = useState(false);
+    const [timeToMake, setTimeToMake] = useState(0);
+  
+    const toggleBox = () => {
+      setIsBoxOpen(!isBoxOpen);
+    };
+  
+    const handleSliderChange = (event) => {
+      setTimeToMake(event.target.value);
+    };
+  
+    return (
+      <div style={{
+          position: "relative",
+          left: "-22%"
+         }}>
+        <button onClick={toggleBox}>
+          {isBoxOpen ? "Maximum Time" : "Maximum Time"}
+        </button>
+        {isBoxOpen && (
+          <div
+          style={{
+            marginTop: "10px",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "5px",
+            position: "absolute",
+            backgroundColor: "white"
+          }}
+          >
+            <label htmlFor="timeSlider">Time to Make: {timeToMake}</label>
+            <input
+              id="timeSlider"
+              type="range"
+              min="0"
+              max="100"
+              value={timeToMake}
+              onChange={handleSliderChange}
+              style={{ width: "80%" }}
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
+  const TagsDropdownBox = () => {
+    const [isBoxOpen, setIsBoxOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
+  
+    const toggleBox = () => {
+      setIsBoxOpen(!isBoxOpen);
+    };
+  
+    const handleSelectionChange = (event) => {
+      setSelectedOption(event.target.value);
+    };
+  
+    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"]; // Enum-like options
+  
+    return (
+      <div style={{
+        position: "relative",
+        left: "1%",
+        top: "-21px",
+        pointerEvents: "none"
+       }}>
+        <button style={{
+        pointerEvents: "auto"
+       }} onClick={toggleBox}>
+          {isBoxOpen ? "Tags" : "Tags"}
+        </button>
+        {isBoxOpen && (
+          <div
+            style={{
+              marginTop: "10px",
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              width: "200px",
+              position: "relative",
+              left: "100px",
+              backgroundColor: "white",
+              pointerEvents: "auto"
+            }}
+          >
+            <label htmlFor="dropdown" style={{ display: "block", marginBottom: "5px" }}>
+              Select an Option: {selectedOption || "None"}
+            </label>
+            <select
+              id="dropdown"
+              value={selectedOption}
+              onChange={handleSelectionChange}
+              style={{ width: "100%", padding: "5px", pointerEvents: "auto" }}
+            >
+              <option value="" disabled>
+                -- Select an Option --
+              </option>
+              {options.map((option, index) => (
+                <option key={index} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -102,14 +251,7 @@ const MainPage = () => {
         </div>
       </div>
 
-      {/* Centered plate content */}
-      <div className="plate-content">
-        <h1 className="title">OchlimPo</h1>
-        <p className="plate-text">
-          Welcome to OchlimPo, your hub for discovering and sharing amazing
-          recipes!
-        </p>
-
+      <div className="search-container">
         {/* Search Box */}
         <div className="search-box">
           <button className="magnifying-glass-button">
@@ -122,9 +264,33 @@ const MainPage = () => {
             className="search-input"
             placeholder="Search for recipes..."
             value={inputValue}
-            onChange={handleInputChange}
+            onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
         </div>
+        <TimeSliderBox />
+        <TagsDropdownBox />
+        <div className="search-results">
+          {searchResults.length > 0 ? (
+            searchResults.map((recipe, index) => (
+              <div key={index} className="recipe-item">
+                <h3>{recipe.title}</h3>
+                <p>Time: {recipe.time} mins</p>
+                <p>Tags: {recipe.tags.join(", ")}</p>
+              </div>
+            ))
+          ) : (
+            <p>No recipes found. Try another search!</p>
+          )}
+        </div>
+      </div>
+
+      {/* Centered plate content */}
+      <div className="plate-content">
+        <h1 className="title">OchlimPo</h1>
+        <p className="plate-text">
+          Welcome to OchlimPo, your hub for discovering and sharing amazing
+          recipes!
+        </p>
       </div>
       {/* Modal for Sign In/Sign Up */}
       {showModal && (

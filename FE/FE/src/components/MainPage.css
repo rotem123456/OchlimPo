@@ -83,12 +83,17 @@
 
 /* Search Box styles */
 .search-box {
+  display: flex;
+  align-items: center;
+  width: 180%;
+  max-width: 600px;
+}
+
+.search-container {
   position: absolute;
-  top:15%;
-  right: 10%;
-  transform: translateY(-340%);
-  width: 100%;
-  max-width: 400px;
+  top: 10%;
+  left: 35%;
+  margin-bottom: 20px;
 }
 
 .search-input {
@@ -107,10 +112,8 @@
 }
 
 .magnifying-glass-button {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  left: 8%;
   border: none;
   background: none;
   cursor: pointer;
