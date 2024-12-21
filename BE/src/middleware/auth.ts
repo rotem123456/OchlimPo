@@ -13,7 +13,7 @@ interface AuthenticatedRequest extends Request {
 export const generateToken = (user: { id: number, email: string }) => {
   return sign(
     { id: user.id, email: user.email },
-    process.env.JWT_SECRET || 'your-secret-key',
+    process.env.JWT_SECRET || '123456789',
     { expiresIn: '24h' }
   );
 };
@@ -45,8 +45,7 @@ export function authenticateToken(
         res.status(403).json({ message: 'Invalid or expired token' });
         return;
       }
-      
-      // Cast decoded to JwtPayload and set user information
+    
       const decodedPayload = decoded as JwtPayload;
       req.user = {
         id: decodedPayload.id,

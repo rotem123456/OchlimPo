@@ -1,5 +1,5 @@
 .backgroundLogin {
-    background-image: url("../../public/images/loginBackground.jpg");
+    background-image: url("../../../public/images/loginBackground.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -11,7 +11,7 @@
   }
 
   .backgroundSignUp {
-    background-image: url("../../public/images/image.png");
+    background-image: url("../../../public/images/SingnUpBackground.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

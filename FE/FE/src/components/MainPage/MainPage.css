@@ -1,6 +1,6 @@
 /* Background styles */
 .background {
-  background-image: url("../../public/images/background_2.webp");
+  background-image: url("../../../public/images/background_2.webp");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

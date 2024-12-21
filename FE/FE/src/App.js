@@ -1,16 +1,17 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import ViewerPage from "./components/ViewerPage";
-import BloggerPage from "./components/BloggerPage";
-import AdminPage from "./components/AdminPage";
-import MainPage from "./components/MainPage";
-import SecondPage from "./components/SecondPage";
-import Login from "./components/LoginPage";
-import SignUp from "./components/SignUpPage";
+import ViewerPage from "./components/ViewerPage/ViewerPage";
+import BloggerPage from "./components/BloggerPage/BloggerPage";
+import AdminPage from "./components/AdminPage/AdminPage";
+import MainPage from "./components/MainPage/MainPage";
+import SecondPage from "./components/SecondPage/SecondPage";
+import Login from "./components/LoginPage/LoginPage";
+import SignUp from "./components/LoginPage/SignUpPage";
+import Weather from "./components/WeatherPage/weather";
 import "./App.css";
 
-// Protected Route Component
+
 const ProtectedRoute = ({ element: Element, allowedRoles, ...rest }) => {
   const { user } = useAuth();
 
@@ -50,6 +51,8 @@ const Navigation = () => {
           <Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link>
           <Link to="/login" style={{ marginRight: "15px" }}>Login</Link>
           <Link to="/signup" style={{ marginRight: "15px" }}>Sign Up</Link>
+          <Link to="/weather" style={{ marginRight: "15px" }}>Weather</Link>
+
         </>
       )}
     </nav>
@@ -66,7 +69,7 @@ const AppRoutes = () => {
       <Route path="/viewer" element={<ViewerPage />} />
       <Route path="/blogger" element={<BloggerPage />} />
       <Route path="/admin" element={<AdminPage />} />
-
+      <Route path="/weather" element = {<Weather/>} />
       
       {/* Protected Routes */}
       <Route 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';  // Import useAuth
+import { useAuth } from '../../context/AuthContext'; 
 import "./MainPage.css";
 
 const BEpath = "http://localhost:4000";
@@ -22,9 +22,8 @@ const MainPage = () => {
   const {user,logout} = useAuth();
   let state =  false;
 
- // Handle advanced search
  const handleSearch = async () => {
-  if (inputValue.length == 0) return;
+  if (inputValue.length === 0) return;
 
   try {
     const response = await fetch(`${BEpath}/recipe/search`, {
