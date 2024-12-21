@@ -188,6 +188,7 @@ React.useEffect(() => {
     <>
       <button onClick={() => navigate('/signup')} className="login-button">Sign up</button>
       <button onClick={() => navigate('/login')} className="login-button">Log in</button>
+      <button onClick={() => navigate('/weather')} className="login-button">SURPRISE ME</button>
     </>
   )}
 </div>
