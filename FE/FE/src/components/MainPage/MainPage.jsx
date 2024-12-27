@@ -30,16 +30,17 @@ const MainPage = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
-        inputValue,
+        name: inputValue,
         maxTime: timeToMake,
       }),
     });
 
     //if (!response.ok) alert(`Failed to fetch search results ${response.status}`);
 
-    const data = [{name: "asfasf"}]//await response.json();
+    const data = await response.json();
     console.log("Advanced search results:", data);
     setResults(data);
   } catch (error) {
@@ -63,47 +64,73 @@ React.useEffect(() => {
     }
   };
 
+  
   const TimeSliderBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [timeToMake, setTimeToMake] = useState(0);
+    const [timeToMake, setTimeToMake] = useState(30);
+    
+    const boxRef = React.useRef(null); // Reference to the box for detecting clicks outside
   
+    // Toggle the box visibility
     const toggleBox = () => {
       setIsBoxOpen(!isBoxOpen);
     };
   
+    // Handle slider change
     const handleSliderChange = (event) => {
       setTimeToMake(event.target.value);
     };
   
+    // Close the box when clicking outside
+    React.useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (boxRef.current && !boxRef.current.contains(event.target)) {
+          setIsBoxOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
     return (
-      <div style={{
-          position: "relative",
-          left: "-22%"
-         }}>
+      <div style={{ position: "relative", left: "-22%" }}>
         <button onClick={toggleBox}>
-          {isBoxOpen ? "Maximum Time" : "Maximum Time"}
+          {isBoxOpen ? `Takes ~${timeToMake} Mins` : `Takes ~${timeToMake} Mins`}
         </button>
         {isBoxOpen && (
           <div
-          style={{
-            marginTop: "10px",
-            padding: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            position: "absolute",
-            backgroundColor: "white"
-          }}
+            ref={boxRef}
+            style={{
+              marginTop: "10px",
+              padding: "8px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              position: "absolute",
+              backgroundColor: "white",
+              width: "150px",
+              fontSize: "14px"
+            }}
           >
-            <label htmlFor="timeSlider">Time to Make: {timeToMake}</label>
             <input
-              id="timeSlider"
-              type="range"
-              min="0"
-              max="100"
-              value={timeToMake}
-              onChange={handleSliderChange}
-              style={{ width: "80%" }}
-            />
+            id="timeSlider"
+            type="range"
+            min="5"
+            max="240"
+            step="5"
+            value={timeToMake}
+            onChange={handleSliderChange}
+            style={{
+              height: "7px",
+              cursor: "pointer",
+              padding: "0px",
+              boxSizing: "border-box",
+              maxWidth: "85%",
+              flexShrink: "1"
+            }}
+          />
           </div>
         )}
       </div>
@@ -113,62 +140,96 @@ React.useEffect(() => {
 
   const TagsDropdownBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("");
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const dropdownRef = React.useRef(null);
   
     const toggleBox = () => {
-      setIsBoxOpen(!isBoxOpen);
+      setIsBoxOpen((prev) => !prev);
     };
   
-    const handleSelectionChange = (event) => {
-      setSelectedOption(event.target.value);
+    const handleCheckboxChange = (event) => {
+      const { value, checked } = event.target;
+      if (checked) {
+        setSelectedOptions((prev) => [...prev, value]);
+      } else {
+        setSelectedOptions((prev) => prev.filter((option) => option !== value));
+      }
     };
   
-    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"]; // Enum-like options
+    const getDisplayText = () => {
+      if (selectedOptions.length === 0) return "Tags";
+      if (selectedOptions.length <= 2) return selectedOptions.join(", ");
+      return `${selectedOptions.slice(0, 2).join(", ")}...`;
+    };
+  
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsBoxOpen(false);
+      }
+    };
+  
+    React.useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
+    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"];
   
     return (
-      <div style={{
-        position: "relative",
-        left: "1%",
-        top: "-21px",
-        pointerEvents: "none"
-       }}>
-        <button style={{
-        pointerEvents: "auto"
-       }} onClick={toggleBox}>
-          {isBoxOpen ? "Tags" : "Tags"}
+      <div
+        ref={dropdownRef}
+        style={{
+          position: "relative",
+          left: "1%",
+          top: "-21px",
+          pointerEvents: "none",
+        }}
+      >
+        <button
+          style={{ pointerEvents: "auto" }}
+          onClick={toggleBox}
+        >
+          {getDisplayText()}
         </button>
         {isBoxOpen && (
           <div
             style={{
-              marginTop: "10px",
-              padding: "10px",
               border: "1px solid #ccc",
               borderRadius: "5px",
               width: "200px",
-              position: "relative",
-              left: "100px",
+              position: "absolute",
+              left: "50px", // Adjusted for absolute positioning
+              top: "25px", // Adjusted relative to the button
               backgroundColor: "white",
-              pointerEvents: "auto"
+              pointerEvents: "auto",
             }}
           >
-            <label htmlFor="dropdown" style={{ display: "block", marginBottom: "5px" }}>
-              Select an Option: {selectedOption || "None"}
-            </label>
-            <select
-              id="dropdown"
-              value={selectedOption}
-              onChange={handleSelectionChange}
-              style={{ width: "100%", padding: "5px", pointerEvents: "auto" }}
-            >
-              <option value="" disabled>
-                -- Select an Option --
-              </option>
+            <div style={{ textAlign: "left" }}>
               {options.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
+                <div
+                  key={index}
+                  style={{
+                    marginBottom: "3px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <input
+                      type="checkbox"
+                      value={option}
+                      checked={selectedOptions.includes(option)}
+                      onChange={handleCheckboxChange}
+                    />
+                    {option}
+                  </label>
+                </div>
               ))}
-            </select>
+</div>
+
+
           </div>
         )}
       </div>
