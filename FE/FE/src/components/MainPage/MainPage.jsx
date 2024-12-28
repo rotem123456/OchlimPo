@@ -8,7 +8,7 @@ const BEpath = "http://localhost:4000";
 const MainPage = () => {
   // Search values
   const [inputValue, setInputValue] = useState("");
-  const [searchResults, setResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
   const [tags, setTags] = useState([]);
@@ -23,7 +23,11 @@ const MainPage = () => {
   let state =  false;
 
  const handleSearch = async () => {
-  if (inputValue.length === 0) return;
+  if (inputValue.length === 0) 
+  {
+    setSearchResults([]);
+    return;
+  }
 
   try {
     const response = await fetch(`${BEpath}/recipe/search`, {
@@ -38,14 +42,12 @@ const MainPage = () => {
       }),
     });
 
-    //if (!response.ok) alert(`Failed to fetch search results ${response.status}`);
-
     const data = await response.json();
     console.log("Advanced search results:", data);
-    setResults(data);
+    setSearchResults(data);
   } catch (error) {
     console.error("Advanced search error:", error);
-    setResults([]);
+    setSearchResults([]);
   }
 };
 
@@ -67,7 +69,6 @@ React.useEffect(() => {
   
   const TimeSliderBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [timeToMake, setTimeToMake] = useState(30);
     
     const boxRef = React.useRef(null); // Reference to the box for detecting clicks outside
   
@@ -97,7 +98,7 @@ React.useEffect(() => {
   
     return (
       <div style={{ position: "relative", left: "-22%" }}>
-        <button onClick={toggleBox}>
+        <button className="advanced-search-button" onClick={toggleBox}>
           {isBoxOpen ? `Takes ~${timeToMake} Mins` : `Takes ~${timeToMake} Mins`}
         </button>
         {isBoxOpen && (
@@ -178,16 +179,11 @@ React.useEffect(() => {
     const options = ["Italian", "Vegetarian", "Mexican", "Dairy"];
   
     return (
-      <div
+      <div className="tags-button-container"
         ref={dropdownRef}
-        style={{
-          position: "relative",
-          left: "1%",
-          top: "-21px",
-          pointerEvents: "none",
-        }}
       >
         <button
+          className="advanced-search-button"
           style={{ pointerEvents: "auto" }}
           onClick={toggleBox}
         >
@@ -227,9 +223,7 @@ React.useEffect(() => {
                   </label>
                 </div>
               ))}
-</div>
-
-
+            </div>
           </div>
         )}
       </div>
@@ -334,9 +328,8 @@ React.useEffect(() => {
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
               <div key={index} className="recipe-item">
-                <h3>{recipe.title}</h3>
-                <p>Time: {recipe.time} mins</p>
-                <p>Tags: {recipe.tags.join(", ")}</p>
+                <h3>{recipe.name}</h3>
+                <p className="recipe-item-time">🕒 {recipe.time} mins</p>
               </div>
             ))
           ) : (

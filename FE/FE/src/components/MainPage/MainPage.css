@@ -121,6 +121,47 @@
   color: #888;
 }
 
+.advanced-search-button {
+  gap: 10px;
+  width: 100px;
+  height: 60px;
+  background-color: #f9f9f9; /* Whitish background */
+  color: #000; /* Black text */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 8px; /* Slightly rounded corners */
+  padding: 5px 10px; /* Add some padding */
+  font-size: 14px; /* Comfortable font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.3s ease; /* Smooth hover effects */
+}
+
+.tags-button-container {
+  position: relative;
+  left: 15%;
+  top: -80px;
+  pointer-events: none;
+}
+
+.search-results {
+  right: -12%;
+  position: relative;
+  z-index: 10;
+}
+
+.recipe-item {
+  text-align: left;
+  background-color: white;
+  height: 100px;
+  width: 160%;
+}
+
+.recipe-item-time {
+  position: relative;
+  text-align: left !important;
+  top: 40%;
+  padding: 0;
+  margin: 0;
+}
 
 /* My Profile Rectangle */
 .my-profile {
