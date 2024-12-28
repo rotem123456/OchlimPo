@@ -54,7 +54,7 @@ const MainPage = () => {
 // Call search directly when query changes
 React.useEffect(() => {
   handleSearch();
-}, [inputValue]); // Trigger search whenever query changes
+}, [inputValue, timeToMake]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -99,7 +99,7 @@ React.useEffect(() => {
     return (
       <div style={{ position: "relative", left: "-22%" }}>
         <button className="advanced-search-button" onClick={toggleBox}>
-          {isBoxOpen ? `Takes ~${timeToMake} Mins` : `Takes ~${timeToMake} Mins`}
+          {isBoxOpen ? `Takes <${timeToMake} Mins` : `Takes <${timeToMake} Mins`}
         </button>
         {isBoxOpen && (
           <div
