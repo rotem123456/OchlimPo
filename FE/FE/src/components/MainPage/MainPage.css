@@ -135,10 +135,27 @@
   transition: all 0.3s ease; /* Smooth hover effects */
 }
 
+
+.time-button-container {
+  position: relative;
+  left: -22%;
+}
+
+.time-box-container {
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  position: absolute;
+  background-color: white;
+  width: 300px;
+  font-size: "14px"
+}
+
 .tags-button-container {
   position: relative;
   left: 15%;
-  top: -80px;
+  top: -60px;
   pointer-events: none;
 }
 

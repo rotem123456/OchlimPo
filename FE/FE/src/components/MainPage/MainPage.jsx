@@ -39,6 +39,7 @@ const MainPage = () => {
       body: JSON.stringify({
         name: inputValue,
         maxTime: timeToMake,
+        tags: tags
       }),
     });
 
@@ -69,9 +70,15 @@ React.useEffect(() => {
   
   const TimeSliderBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    
-    const boxRef = React.useRef(null); // Reference to the box for detecting clicks outside
-  
+
+    const boxRef = React.useRef(null);
+    const boxElement = document.querySelectorAll(".time-box-container")[0];
+    if (boxElement !== null && boxElement !== undefined) {
+      boxRef.current = boxElement;
+    }
+
+    console.log("boxRef", boxElement);
+
     // Toggle the box visibility
     const toggleBox = () => {
       setIsBoxOpen(!isBoxOpen);
@@ -97,23 +104,14 @@ React.useEffect(() => {
     }, []);
   
     return (
-      <div style={{ position: "relative", left: "-22%" }}>
-        <button className="advanced-search-button" onClick={toggleBox}>
-          {isBoxOpen ? `Takes <${timeToMake} Mins` : `Takes <${timeToMake} Mins`}
+      <div className="time-button-container">
+        <button className="advanced-search-button" style={{width:"150px"}} onClick={toggleBox}>
+          {isBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
         </button>
         {isBoxOpen && (
           <div
             ref={boxRef}
-            style={{
-              marginTop: "10px",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              position: "absolute",
-              backgroundColor: "white",
-              width: "150px",
-              fontSize: "14px"
-            }}
+            className="time-box-container"
           >
             <input
             id="timeSlider"
@@ -128,7 +126,7 @@ React.useEffect(() => {
               cursor: "pointer",
               padding: "0px",
               boxSizing: "border-box",
-              maxWidth: "85%",
+              maxWidth: "60%",
               flexShrink: "1"
             }}
           />
@@ -141,7 +139,6 @@ React.useEffect(() => {
 
   const TagsDropdownBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [selectedOptions, setSelectedOptions] = useState([]);
     const dropdownRef = React.useRef(null);
   
     const toggleBox = () => {
@@ -151,16 +148,16 @@ React.useEffect(() => {
     const handleCheckboxChange = (event) => {
       const { value, checked } = event.target;
       if (checked) {
-        setSelectedOptions((prev) => [...prev, value]);
+        setTags((prev) => [...prev, value]);
       } else {
-        setSelectedOptions((prev) => prev.filter((option) => option !== value));
+        setTags((prev) => prev.filter((option) => option !== value));
       }
     };
   
     const getDisplayText = () => {
-      if (selectedOptions.length === 0) return "Tags";
-      if (selectedOptions.length <= 2) return selectedOptions.join(", ");
-      return `${selectedOptions.slice(0, 2).join(", ")}...`;
+      if (tags.length === 0) return "Tags";
+      if (tags.length <= 2) return tags.join(", ");
+      return `${tags.slice(0, 2).join(", ")}...`;
     };
   
     const handleClickOutside = (event) => {
@@ -202,21 +199,20 @@ React.useEffect(() => {
               pointerEvents: "auto",
             }}
           >
-            <div style={{ textAlign: "left" }}>
+            <div>
               {options.map((option, index) => (
                 <div
                   key={index}
                   style={{
                     marginBottom: "3px",
-                    display: "flex",
                     alignItems: "center",
                   }}
                 >
-                  <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <label style={{  alignItems: "center", gap: "8px" }}>
                     <input
                       type="checkbox"
                       value={option}
-                      checked={selectedOptions.includes(option)}
+                      checked={tags.includes(option)}
                       onChange={handleCheckboxChange}
                     />
                     {option}

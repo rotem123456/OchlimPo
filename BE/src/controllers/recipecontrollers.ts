@@ -64,17 +64,19 @@ export const recipecontrollers = {
     },
 
     getRecipeByUserQuery: async (req:Request, res: Response) => {
+
+        console.log(req.body);
+
         try {
-            const recipe = await prisma.recipe.findMany({
-                where: {
-                  AND: [
-                      {name: { contains: req.body.name, mode: "insensitive" }},
-                      {time : {gt: "0", lt: req.body.maxTime}}
-                      ]
-                  }
-                })
-            console.log("Found recipe ", recipe)
-            res.json(recipe);
+          const maxTime = parseInt(req.body.maxTime, 10);
+
+          const recipes = await prisma.$queryRaw`
+          SELECT * FROM "Recipe"
+          WHERE "name" ILIKE ${'%' + req.body.name + '%'}
+            AND CAST("time" AS INTEGER) > 0
+            AND CAST("time" AS INTEGER) < ${maxTime};
+        `;
+            res.json(recipes);
 
         } catch (error) {
             res.status(400).json({ error: 'Failed to get recipes from query' });
