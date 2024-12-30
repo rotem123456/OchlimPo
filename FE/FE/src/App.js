@@ -7,6 +7,7 @@ import MainPage from "./components/MainPage";
 import SecondPage from "./components/SecondPage";
 import Login from "./components/LoginPage";
 import SignUp from "./components/SignUpPage";
+import RecipeUpload from "./components/UploadRecipesPage"
 import "./App.css";
 
 const App = () => {
@@ -33,8 +34,11 @@ const App = () => {
           <Link to="/login" style={{ marginRight: "15px" }}>
             Login
           </Link>
-          <Link to="/signup">
+          <Link to="/signup" style={{ marginRight: "15px" }}>
             Sign Up
+          </Link>
+          <Link to="/upload_recipes">
+            upload recipes
           </Link>
         </nav>
 
@@ -47,6 +51,7 @@ const App = () => {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/upload_recipes" element={<RecipeUpload />} />
         </Routes>
       </div>
     </Router>

@@ -1,15 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./BloggerPage.css";
 
 const BloggerPage = () => {
   const [recipes, setRecipes] = useState([]);
+  const navigate = useNavigate();
 
   const uploadRecipe = () => {
-    const recipeName = prompt("Enter the name of your recipe:");
-    if (recipeName) {
-      setRecipes([...recipes, recipeName]);
-      alert(`Your recipe "${recipeName}" has been uploaded!`);
-    }
+      navigate("/upload_recipes");
   };
 
   return (
