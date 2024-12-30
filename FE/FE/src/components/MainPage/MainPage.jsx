@@ -187,18 +187,7 @@ React.useEffect(() => {
           {getDisplayText()}
         </button>
         {isBoxOpen && (
-          <div
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              width: "200px",
-              position: "absolute",
-              left: "50px", // Adjusted for absolute positioning
-              top: "25px", // Adjusted relative to the button
-              backgroundColor: "white",
-              pointerEvents: "auto",
-            }}
-          >
+          <div className="tags-box-container">
             <div>
               {options.map((option, index) => (
                 <div

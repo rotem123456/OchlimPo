@@ -94,6 +94,7 @@
   top: 10%;
   left: 35%;
   margin-bottom: 20px;
+  width: ;
 }
 
 .search-input {
@@ -125,14 +126,14 @@
   gap: 10px;
   width: 100px;
   height: 60px;
-  background-color: #f9f9f9; /* Whitish background */
-  color: #000; /* Black text */
-  border: 1px solid #ccc; /* Subtle border */
-  border-radius: 8px; /* Slightly rounded corners */
-  padding: 5px 10px; /* Add some padding */
-  font-size: 14px; /* Comfortable font size */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: all 0.3s ease; /* Smooth hover effects */
+  background-color: #f9f9f9;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 
@@ -149,7 +150,8 @@
   position: absolute;
   background-color: white;
   width: 300px;
-  font-size: "14px"
+  font-size: "14px";
+  z-index: 1000;
 }
 
 .tags-button-container {
@@ -159,10 +161,24 @@
   pointer-events: none;
 }
 
+.tags-box-container {
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  position: absolute;
+  left: "50px";
+  top: "25px";
+  background-color: white;
+  width: 150px;
+  font-size: "14px";
+  z-index: 1000;
+}
+
 .search-results {
   right: -12%;
   position: relative;
-  z-index: 10;
+  z-index: 500;
 }
 
 .recipe-item {
