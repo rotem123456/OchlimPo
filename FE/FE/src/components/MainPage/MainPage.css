@@ -162,17 +162,29 @@
 }
 
 .tags-box-container {
-  margin-top: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   position: absolute;
-  left: "50px";
-  top: "25px";
+  top: 100%;
+  left: 0;
+  width: 100%;
   background-color: white;
-  width: 150px;
-  font-size: "14px";
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  box-sizing: border-box;
   z-index: 1000;
+  overflow: hidden;
+}
+
+.option-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .search-results {
@@ -188,10 +200,39 @@
   width: 160%;
 }
 
+.recipe-item-title {
+  position: absolute;
+  text-align: left !important;
+  top: 12%;
+  left: 8%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-description {
+  position: absolute;
+  text-align: left !important;
+  max-width: inherit;
+  max-width: 100%;
+  top: 35%;
+  left: 8%;
+  padding: 0;
+  margin: 0;
+}
+
 .recipe-item-time {
+  position: absolute;
+  text-align: left !important;
+  top: 75%;
+  left: 140%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-user{
   position: relative;
   text-align: left !important;
-  top: 40%;
+  top: 60%;
   padding: 0;
   margin: 0;
 }

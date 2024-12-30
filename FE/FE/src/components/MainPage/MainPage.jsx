@@ -176,9 +176,7 @@ React.useEffect(() => {
     const options = ["Italian", "Vegetarian", "Mexican", "Dairy"];
   
     return (
-      <div className="tags-button-container"
-        ref={dropdownRef}
-      >
+      <div className="tags-button-container" ref={dropdownRef}>
         <button
           className="advanced-search-button"
           style={{ pointerEvents: "auto" }}
@@ -190,14 +188,8 @@ React.useEffect(() => {
           <div className="tags-box-container">
             <div>
               {options.map((option, index) => (
-                <div
-                  key={index}
-                  style={{
-                    marginBottom: "3px",
-                    alignItems: "center",
-                  }}
-                >
-                  <label style={{  alignItems: "center", gap: "8px" }}>
+                <div key={index} className="option-container">
+                  <label className="option-label">
                     <input
                       type="checkbox"
                       value={option}
@@ -313,8 +305,9 @@ React.useEffect(() => {
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
               <div key={index} className="recipe-item">
-                <h3>{recipe.name}</h3>
-                <p className="recipe-item-time">🕒 {recipe.time} mins</p>
+                <h3 className="recipe-item-title">{recipe.name}</h3>
+                <p className="recipe-item-description">{recipe.shortDescription}</p>
+                <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
               </div>
             ))
           ) : (
