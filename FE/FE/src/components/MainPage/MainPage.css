@@ -94,6 +94,7 @@
   top: 10%;
   left: 35%;
   margin-bottom: 20px;
+  width: ;
 }
 
 .search-input {
@@ -121,6 +122,146 @@
   color: #888;
 }
 
+.advanced-search-button {
+  gap: 10px;
+  display: relative;
+  width: 100px;
+  height: 60px;
+  background-color: #f9f9f9;
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+
+.time-button-container {
+  position: relative;
+  left: -15%;
+}
+
+.time-box-container {
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  position: absolute;
+  background-color: white;
+  width: 300px;
+  font-size: "14px";
+  z-index: 1000;
+}
+
+.tags-button-container {
+  position: relative;
+  left: 22%;
+  top: -60px;
+}
+
+.tags-box-container {
+  display: block;
+  position: absolute;
+  left: 30%;
+  background-color: #fff;
+  min-width: 140px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+  margin-left: 0px;
+  padding-left: 0px;
+  z-index: 1000;
+}
+
+
+.option-label {
+  list-style-type: none;
+  padding-left: 0;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.option-label:hover {
+  background-color: #f1f1f1;
+}
+
+.search-results {
+  right: -12%;
+  width: 100%;
+  position: absolute;
+  z-index: 500;
+}
+
+.recipe-item {
+  position: relative;
+  margin-bottom: 3px;
+  text-align: left;
+  background-color: white;
+  height: 100px;
+  width: 160%;
+}
+
+.recipe-item-title {
+  position: absolute;
+  text-align: left !important;
+  top: 12%;
+  left: 4%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-description {
+  position: absolute;
+  text-align: left !important;
+  max-width: inherit;
+  max-width: 100%;
+  top: 35%;
+  left: 4%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-time {
+  position: absolute;
+  text-align: left !important;
+  top:75%;
+  left: 3%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-ago {
+  position: absolute;
+  text-align: left !important;
+  top:75%;
+  left: 20%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-user{
+  position: absolute;
+  text-align: left !important;
+  top: 75%;
+  left: 40%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-tags{
+  position: absolute;
+  text-align: left !important;
+  top: 75%;
+  left: 70%;
+  padding: 0;
+  margin: 0;
+}
 
 /* My Profile Rectangle */
 .my-profile {

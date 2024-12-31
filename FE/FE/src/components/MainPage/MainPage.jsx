@@ -8,7 +8,7 @@ const BEpath = "http://localhost:4000";
 const MainPage = () => {
   // Search values
   const [inputValue, setInputValue] = useState("");
-  const [searchResults, setResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
   const [tags, setTags] = useState([]);
@@ -23,35 +23,39 @@ const MainPage = () => {
   let state =  false;
 
  const handleSearch = async () => {
-  if (inputValue.length === 0) return;
+  if (inputValue.length === 0) 
+  {
+    setSearchResults([]);
+    return;
+  }
 
   try {
     const response = await fetch(`${BEpath}/recipe/search`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
-        inputValue,
+        name: inputValue,
         maxTime: timeToMake,
+        tags: tags
       }),
     });
 
-    //if (!response.ok) alert(`Failed to fetch search results ${response.status}`);
-
-    const data = [{name: "asfasf"}]//await response.json();
+    const data = await response.json();
     console.log("Advanced search results:", data);
-    setResults(data);
+    setSearchResults(data);
   } catch (error) {
     console.error("Advanced search error:", error);
-    setResults([]);
+    setSearchResults([]);
   }
 };
 
 // Call search directly when query changes
 React.useEffect(() => {
   handleSearch();
-}, [inputValue]); // Trigger search whenever query changes
+}, [inputValue, timeToMake]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -63,47 +67,109 @@ React.useEffect(() => {
     }
   };
 
+  function getTimePassed(datetime) {
+    const now = new Date();
+    const past = new Date(datetime);
+    const diffInSeconds = Math.floor((now - past) / 1000);
+  
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds} ${diffInSeconds === 1 ? 'second' : 'seconds'}`;
+    }
+  
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'}`;
+    }
+  
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'}`;
+    }
+  
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) {
+      return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'}`;
+    }
+  
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) {
+      return `${diffInMonths} ${diffInMonths === 1 ? 'month' : 'months'}`;
+    }
+  
+    const diffInYears = Math.floor(diffInMonths / 12);
+    return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'}`;
+  }  
+
+  function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    } else {
+      return text;
+    }
+  }
+  
   const TimeSliderBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [timeToMake, setTimeToMake] = useState(0);
-  
+
+    const boxRef = React.useRef(null);
+    const boxElement = document.querySelectorAll(".time-box-container")[0];
+    if (boxElement !== null && boxElement !== undefined) {
+      boxRef.current = boxElement;
+    }
+
+    console.log("boxRef", boxElement);
+
+    // Toggle the box visibility
     const toggleBox = () => {
       setIsBoxOpen(!isBoxOpen);
     };
   
+    // Handle slider change
     const handleSliderChange = (event) => {
       setTimeToMake(event.target.value);
     };
   
+    // Close the box when clicking outside
+    React.useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (boxRef.current && !boxRef.current.contains(event.target)) {
+          setIsBoxOpen(false);
+        }
+      };
+  
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
     return (
-      <div style={{
-          position: "relative",
-          left: "-22%"
-         }}>
-        <button onClick={toggleBox}>
-          {isBoxOpen ? "Maximum Time" : "Maximum Time"}
+      <div className="time-button-container">
+        <button className="advanced-search-button" style={{width:"150px"}} onClick={toggleBox}>
+          {isBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
         </button>
         {isBoxOpen && (
           <div
-          style={{
-            marginTop: "10px",
-            padding: "10px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            position: "absolute",
-            backgroundColor: "white"
-          }}
+            ref={boxRef}
+            className="time-box-container"
           >
-            <label htmlFor="timeSlider">Time to Make: {timeToMake}</label>
             <input
-              id="timeSlider"
-              type="range"
-              min="0"
-              max="100"
-              value={timeToMake}
-              onChange={handleSliderChange}
-              style={{ width: "80%" }}
-            />
+            id="timeSlider"
+            type="range"
+            min="5"
+            max="240"
+            step="5"
+            value={timeToMake}
+            onChange={handleSliderChange}
+            style={{
+              height: "7px",
+              cursor: "pointer",
+              padding: "0px",
+              boxSizing: "border-box",
+              maxWidth: "60%",
+              flexShrink: "1"
+            }}
+          />
           </div>
         )}
       </div>
@@ -113,63 +179,63 @@ React.useEffect(() => {
 
   const TagsDropdownBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("");
+    const dropdownRef = React.useRef(null);
   
     const toggleBox = () => {
-      setIsBoxOpen(!isBoxOpen);
+      setIsBoxOpen((prev) => !prev);
+    };
+
+    const handleItemClick = (item) => {
+
+      if (tags.includes(item)) {
+        setTags((prevTags) => prevTags.filter((tag) => tag !== item));
+      }
+      else {
+        setTags((prevTags) => [...prevTags, item]);
+      }
+      };
+  
+    const getDisplayText = () => {
+      if (tags.length === 0) return "Tags";
+      if (tags.length <= 2) return tags.join(", ");
+      return `${tags.slice(0, 2).join(", ")}...`;
     };
   
-    const handleSelectionChange = (event) => {
-      setSelectedOption(event.target.value);
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsBoxOpen(false);
+      }
     };
   
-    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"]; // Enum-like options
+    React.useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+  
+    const options = ["japanese", "spicy", "meat", "vegitarian"];
   
     return (
-      <div style={{
-        position: "relative",
-        left: "1%",
-        top: "-21px",
-        pointerEvents: "none"
-       }}>
-        <button style={{
-        pointerEvents: "auto"
-       }} onClick={toggleBox}>
-          {isBoxOpen ? "Tags" : "Tags"}
+      <div className="tags-button-container" ref={dropdownRef}>
+        <button
+          className="advanced-search-button"
+          style={{ pointerEvents: "auto" }}
+          onClick={toggleBox}
+        >
+          {getDisplayText()}
         </button>
         {isBoxOpen && (
-          <div
-            style={{
-              marginTop: "10px",
-              padding: "10px",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-              width: "200px",
-              position: "relative",
-              left: "100px",
-              backgroundColor: "white",
-              pointerEvents: "auto"
-            }}
-          >
-            <label htmlFor="dropdown" style={{ display: "block", marginBottom: "5px" }}>
-              Select an Option: {selectedOption || "None"}
-            </label>
-            <select
-              id="dropdown"
-              value={selectedOption}
-              onChange={handleSelectionChange}
-              style={{ width: "100%", padding: "5px", pointerEvents: "auto" }}
-            >
-              <option value="" disabled>
-                -- Select an Option --
-              </option>
-              {options.map((option, index) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
+          <ul className="tags-box-container">
+            {options.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={() => handleItemClick(option)}
+              >
+                {option}
+              </li>
               ))}
-            </select>
-          </div>
+          </ul>
         )}
       </div>
     );
@@ -273,13 +339,16 @@ React.useEffect(() => {
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
               <div key={index} className="recipe-item">
-                <h3>{recipe.title}</h3>
-                <p>Time: {recipe.time} mins</p>
-                <p>Tags: {recipe.tags.join(", ")}</p>
+                <h3 className="recipe-item-title">{recipe.name}</h3>
+                <p className="recipe-item-description">{recipe.shortDescription}</p>
+                <p className="recipe-item-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
+                <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
+                <p className="recipe-item-user">👨‍🍳 {recipe.username}</p>
+                <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 17)}</p>
               </div>
             ))
           ) : (
-            <p>No recipes found. Try another search!</p>
+            <p></p>
           )}
         </div>
       </div>
