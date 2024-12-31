@@ -194,6 +194,8 @@
 }
 
 .recipe-item {
+  position: relative;
+  margin-bottom: 3px;
   text-align: left;
   background-color: white;
   height: 100px;
@@ -204,7 +206,7 @@
   position: absolute;
   text-align: left !important;
   top: 12%;
-  left: 8%;
+  left: 4%;
   padding: 0;
   margin: 0;
 }
@@ -215,7 +217,7 @@
   max-width: inherit;
   max-width: 100%;
   top: 35%;
-  left: 8%;
+  left: 4%;
   padding: 0;
   margin: 0;
 }
@@ -223,16 +225,26 @@
 .recipe-item-time {
   position: absolute;
   text-align: left !important;
-  top: 75%;
-  left: 140%;
+  top:75%;
+  left: 4%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-ago {
+  position: absolute;
+  text-align: left !important;
+  top:75%;
+  left: 24%;
   padding: 0;
   margin: 0;
 }
 
 .recipe-item-user{
-  position: relative;
+  position: absolute;
   text-align: left !important;
-  top: 60%;
+  top: 75%;
+  left: 48%;
   padding: 0;
   margin: 0;
 }

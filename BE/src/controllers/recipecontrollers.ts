@@ -72,9 +72,11 @@ export const recipecontrollers = {
 
           const recipes = await prisma.$queryRaw`
           SELECT * FROM "Recipe"
-          WHERE "name" ILIKE ${'%' + req.body.name + '%'}
-            AND CAST("time" AS INTEGER) > 0
-            AND CAST("time" AS INTEGER) < ${maxTime};
+          JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
+          WHERE "Recipe"."name" ILIKE ${'%' + req.body.name + '%'}
+            AND CAST("Recipe"."time" AS INTEGER) > 0
+            AND CAST("Recipe"."time" AS INTEGER) < ${maxTime}
+            ;
         `;
             res.json(recipes);
 
