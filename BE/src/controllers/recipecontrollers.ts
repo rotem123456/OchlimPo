@@ -69,14 +69,13 @@ export const recipecontrollers = {
 
         try {
           const maxTime = parseInt(req.body.maxTime, 10);
-
           const recipes = await prisma.$queryRaw`
           SELECT * FROM "Recipe"
           JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
+          JOIN (SELECT "recipeId", array_agg("type") AS tags FROM "RecipeType" GROUP BY "recipeId") AS "RecipeTags" ON "RecipeTags"."recipeId" = "Recipe"."id"
           WHERE "Recipe"."name" ILIKE ${'%' + req.body.name + '%'}
             AND CAST("Recipe"."time" AS INTEGER) > 0
             AND CAST("Recipe"."time" AS INTEGER) < ${maxTime}
-            ;
         `;
             res.json(recipes);
 

@@ -124,6 +124,7 @@
 
 .advanced-search-button {
   gap: 10px;
+  display: relative;
   width: 100px;
   height: 60px;
   background-color: #f9f9f9;
@@ -139,7 +140,7 @@
 
 .time-button-container {
   position: relative;
-  left: -22%;
+  left: -15%;
 }
 
 .time-box-container {
@@ -156,40 +157,44 @@
 
 .tags-button-container {
   position: relative;
-  left: 15%;
+  left: 22%;
   top: -60px;
-  pointer-events: none;
 }
 
 .tags-box-container {
+  display: block;
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  box-sizing: border-box;
+  left: 30%;
+  background-color: #fff;
+  min-width: 140px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+  margin-left: 0px;
+  padding-left: 0px;
   z-index: 1000;
-  overflow: hidden;
 }
 
-.option-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 3px;
-}
 
 .option-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  list-style-type: none;
+  padding-left: 0;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.option-label:hover {
+  background-color: #f1f1f1;
 }
 
 .search-results {
   right: -12%;
-  position: relative;
+  width: 100%;
+  position: absolute;
   z-index: 500;
 }
 
@@ -226,7 +231,7 @@
   position: absolute;
   text-align: left !important;
   top:75%;
-  left: 4%;
+  left: 3%;
   padding: 0;
   margin: 0;
 }
@@ -235,7 +240,7 @@
   position: absolute;
   text-align: left !important;
   top:75%;
-  left: 24%;
+  left: 20%;
   padding: 0;
   margin: 0;
 }
@@ -244,7 +249,16 @@
   position: absolute;
   text-align: left !important;
   top: 75%;
-  left: 48%;
+  left: 40%;
+  padding: 0;
+  margin: 0;
+}
+
+.recipe-item-tags{
+  position: absolute;
+  text-align: left !important;
+  top: 75%;
+  left: 70%;
   padding: 0;
   margin: 0;
 }

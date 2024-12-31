@@ -99,6 +99,14 @@ React.useEffect(() => {
     const diffInYears = Math.floor(diffInMonths / 12);
     return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'}`;
   }  
+
+  function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    } else {
+      return text;
+    }
+  }
   
   const TimeSliderBox = () => {
     const [isBoxOpen, setIsBoxOpen] = useState(false);
@@ -176,15 +184,16 @@ React.useEffect(() => {
     const toggleBox = () => {
       setIsBoxOpen((prev) => !prev);
     };
-  
-    const handleCheckboxChange = (event) => {
-      const { value, checked } = event.target;
-      if (checked) {
-        setTags((prev) => [...prev, value]);
-      } else {
-        setTags((prev) => prev.filter((option) => option !== value));
+
+    const handleItemClick = (item) => {
+
+      if (tags.includes(item)) {
+        setTags((prevTags) => prevTags.filter((tag) => tag !== item));
       }
-    };
+      else {
+        setTags((prevTags) => [...prevTags, item]);
+      }
+      };
   
     const getDisplayText = () => {
       if (tags.length === 0) return "Tags";
@@ -205,7 +214,7 @@ React.useEffect(() => {
       };
     }, []);
   
-    const options = ["Italian", "Vegetarian", "Mexican", "Dairy"];
+    const options = ["japanese", "spicy", "meat", "vegitarian"];
   
     return (
       <div className="tags-button-container" ref={dropdownRef}>
@@ -217,23 +226,16 @@ React.useEffect(() => {
           {getDisplayText()}
         </button>
         {isBoxOpen && (
-          <div className="tags-box-container">
-            <div>
-              {options.map((option, index) => (
-                <div key={index} className="option-container">
-                  <label className="option-label">
-                    <input
-                      type="checkbox"
-                      value={option}
-                      checked={tags.includes(option)}
-                      onChange={handleCheckboxChange}
-                    />
-                    {option}
-                  </label>
-                </div>
+          <ul className="tags-box-container">
+            {options.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={() => handleItemClick(option)}
+              >
+                {option}
+              </li>
               ))}
-            </div>
-          </div>
+          </ul>
         )}
       </div>
     );
@@ -342,10 +344,11 @@ React.useEffect(() => {
                 <p className="recipe-item-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
                 <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
                 <p className="recipe-item-user">👨‍🍳 {recipe.username}</p>
+                <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 17)}</p>
               </div>
             ))
           ) : (
-            <p>No recipes found. Try another search!</p>
+            <p></p>
           )}
         </div>
       </div>
