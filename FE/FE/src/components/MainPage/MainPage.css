@@ -221,6 +221,13 @@
   background-color: #f1f1f1;
 }
 
+.surprise-button-container {
+  display: inline-block;
+  width: auto;
+  position: absolute;
+  left: 115.5%;
+}
+
 .search-results {
   right: -12%;
   top: 220%;

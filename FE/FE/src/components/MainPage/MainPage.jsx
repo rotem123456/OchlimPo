@@ -366,7 +366,6 @@ const MainPage = () => {
     <>
       <button onClick={() => navigate('/signup')} className="login-button">Sign up</button>
       <button onClick={() => navigate('/login')} className="login-button">Log in</button>
-      <button onClick={() => navigate('/weather')} className="login-button">SURPRISE ME</button>
     </>
   )}
 </div>
@@ -448,6 +447,9 @@ const MainPage = () => {
         <TimeSliderBox />
         <TagsDropdownBox />
         <IngredientsDropdownBox />
+        <div className="surprise-button-container">
+        <button onClick={() => navigate('/weather')} className="advanced-search-button">I'm Feeling Lazy...</button>
+        </div>
         <div className="search-results">
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
