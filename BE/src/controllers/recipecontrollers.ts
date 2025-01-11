@@ -99,5 +99,22 @@ export const recipecontrollers = {
       } catch (error) {
         res.status(400).json({ error: 'Failed to get tags from query' });
       }
+  },
+
+  getAllIngredients: async (req: Request, res: Response) => {
+    try {
+      const ings: { enumlabel: string }[] = await prisma.$queryRaw`
+        SELECT enumlabel
+        FROM pg_enum
+        WHERE enumtypid = (
+          SELECT oid
+          FROM pg_type
+          WHERE typname = 'Ingredients'
+        );
+      `;
+      res.json(ings.map((ing) => ing.enumlabel));
+    } catch (error) {
+      res.status(400).json({ error: 'Failed to get ingredients from query' });
+    }
   }
 }

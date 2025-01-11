@@ -12,9 +12,11 @@ const MainPage = () => {
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
   const [all_tags, setAllTags] = useState([]);
+  const [all_ingredients, setAllIngredients] = useState([]);
   const [tags, setTags] = useState([]);
   const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
   const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
+  const [isIngredientsBoxOpen, setIsIngredientsBoxOpen] = useState(false);
 
 
   // Other things in page
@@ -37,12 +39,30 @@ const MainPage = () => {
       });
   
       const data = await response.json();
-
-      console.log("tags:", data);
       setAllTags(data);
     } catch (error) {
       console.error("Tags fetch error:", error);
       setAllTags([]);
+    }
+  };
+
+  const fetchIngredients = async () => {
+    try {
+      const response = await fetch(`${BEpath}/recipe/ingredients`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+      });
+  
+      const data = await response.json();
+
+      console.log("ings:", data);
+      setAllIngredients(data);
+    } catch (error) {
+      console.error("Tags fetch error:", error);
+      setAllIngredients([]);
     }
   };
 
@@ -79,6 +99,7 @@ const MainPage = () => {
   // This will be called every time the page is loaded
   React.useEffect(() => {
     fetchTags();
+    fetchIngredients();
   }, []);
 
   // Call search directly when query changes
@@ -256,8 +277,74 @@ const MainPage = () => {
               <li
               className="option-label"
               onClick={(e) => handleItemClick(option)}
+              id = {index}
               >
                 {tags.includes(option) ? `${option} ✔️` : option}
+              </li>
+              ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
+  const IngredientsDropdownBox = () => {
+    const elementRef = React.useRef(null);
+
+    const toggleIngredientsBox = () => {
+      setIsIngredientsBoxOpen(!isIngredientsBoxOpen);
+    };
+
+    const handleItemClick = (item) => {
+      setIsIngredientsBoxOpen(true);
+      if (ingredients.includes(item)) {
+        setIngredients((prevIngredients) => prevIngredients.filter((ing) => ing !== item));
+      }
+      else {
+        setIngredients((prevIngredients) => [...prevIngredients, item]);
+      }
+    };
+  
+    const getDisplayText = () => {
+      if (ingredients.length === 0) return "Ingredients";
+      if (ingredients.length <= 2) return ingredients.join(", ");
+      return `${ingredients.slice(0, 2).join(", ")}...`;
+    };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsIngredientsBoxOpen(false);
+      }
+    };
+  
+    React.useEffect(() => {
+      // Attach event listener to the document
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="ingredients-button-container"
+      ref={elementRef}>
+        <button
+          className="advanced-search-button"
+          onClick={toggleIngredientsBox}
+        >
+          {getDisplayText()}
+        </button>
+        {isIngredientsBoxOpen && (
+          <ul className="ingredients-box-container">
+            {all_ingredients.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={(e) => handleItemClick(option)}
+              id = {index}
+              >
+                {ingredients.includes(option) ? `${option} ✔️` : option}
               </li>
               ))}
           </ul>
@@ -360,6 +447,7 @@ const MainPage = () => {
         </div>
         <TimeSliderBox />
         <TagsDropdownBox />
+        <IngredientsDropdownBox />
         <div className="search-results">
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (
