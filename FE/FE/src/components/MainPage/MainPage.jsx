@@ -14,6 +14,7 @@ const MainPage = () => {
   const [all_tags, setAllTags] = useState([]);
   const [all_ingredients, setAllIngredients] = useState([]);
   const [tags, setTags] = useState([]);
+  const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
   const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
   const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
   const [isIngredientsBoxOpen, setIsIngredientsBoxOpen] = useState(false);
@@ -158,6 +159,76 @@ const MainPage = () => {
     }
   }
 
+
+  const ResultsFilterDropdownBox = () => {
+    const elementRef = React.useRef(null);
+    const filterOptions = [
+      "Newest",
+      "Oldest",
+      "Fastest",
+      "Slowest",
+      "Least Ingredients",
+      "Most Ingredients",
+    ];
+
+    const toggleFilterBox = () => {
+      setIsFilterBoxOpen(!isFilterBoxOpen);
+    };
+
+    const handleItemClick = (item) => {
+      setIsFilterBoxOpen(true);
+      // add here
+    };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsFilterBoxOpen(false);
+      }
+    };
+  
+    React.useEffect(() => {
+      // Attach event listener to the document
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="filter-button-container"
+      ref={elementRef}>
+        <button
+          className="advanced-search-button"
+          onClick={toggleFilterBox}
+        >
+           <img
+            src="/images/filter-32.png"
+            style={{
+              maxWidth: '30px',
+              maxHeight: '30px',
+              width: '50%',
+              height: 'auto'
+            }}
+            />
+        </button>
+        {isFilterBoxOpen && (
+          <ul className="filter-box-container">
+            {filterOptions.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={(e) => handleItemClick(option)}
+              id = {index}
+              >
+                {tags.includes(option) ? `${option} ✔️` : option}
+              </li>
+              ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
 
   const TimeSliderBox = () => {
     const elementRef = React.useRef(null);
@@ -444,11 +515,17 @@ const MainPage = () => {
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
         </div>
+        <ResultsFilterDropdownBox />
         <TimeSliderBox />
         <TagsDropdownBox />
         <IngredientsDropdownBox />
         <div className="surprise-button-container">
-        <button onClick={() => navigate('/weather')} className="advanced-search-button">I'm Feeling Lazy...</button>
+           <button onClick={() => navigate('/weather')} 
+            className="advanced-search-button"
+            style={{width:"165%"}}
+            >
+            I'm Feeling Lazy...
+           </button>
         </div>
         <div className="search-results">
           {searchResults.length > 0 ? (

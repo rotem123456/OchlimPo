@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
+
 const now = new Date();
 
 const prisma = new PrismaClient();
@@ -73,9 +74,10 @@ export const recipecontrollers = {
           SELECT * FROM "Recipe"
           JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
           JOIN (SELECT "recipeId", array_agg("type") AS tags FROM "RecipeType" GROUP BY "recipeId") AS "RecipeTags" ON "RecipeTags"."recipeId" = "Recipe"."id"
-          WHERE "Recipe"."name" ILIKE ${'%' + req.body.name + '%'}
+          WHERE ("Recipe"."name" ILIKE ${'%' + req.body.name + '%'} OR "Recipe"."shortDescription" ILIKE ${'%' + req.body.name + '%'})
             AND CAST("Recipe"."time" AS INTEGER) > 0
             AND CAST("Recipe"."time" AS INTEGER) < ${maxTime}
+          LIMIT 20;
         `;
             res.json(recipes);
 
