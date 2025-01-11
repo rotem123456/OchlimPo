@@ -11,7 +11,11 @@ const MainPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
+  const [all_tags, setAllTags] = useState([]);
   const [tags, setTags] = useState([]);
+  const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
+  const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
+
 
   // Other things in page
   const [recipes, setRecipes] = useState([]);
@@ -21,6 +25,26 @@ const MainPage = () => {
   const navigate = useNavigate();
   const {user,logout} = useAuth();
   let state =  false;
+
+  const fetchTags = async () => {
+    try {
+      const response = await fetch(`${BEpath}/recipe/tags`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+      });
+  
+      const data = await response.json();
+
+      console.log("tags:", data);
+      setAllTags(data);
+    } catch (error) {
+      console.error("Tags fetch error:", error);
+      setAllTags([]);
+    }
+  };
 
  const handleSearch = async () => {
   if (inputValue.length === 0) 
@@ -52,10 +76,15 @@ const MainPage = () => {
   }
 };
 
-// Call search directly when query changes
-React.useEffect(() => {
-  handleSearch();
-}, [inputValue, timeToMake]); // Trigger search whenever query changes
+  // This will be called every time the page is loaded
+  React.useEffect(() => {
+    fetchTags();
+  }, []);
+
+  // Call search directly when query changes
+  React.useEffect(() => {
+    handleSearch();
+  }, [inputValue, timeToMake]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -107,50 +136,46 @@ React.useEffect(() => {
       return text;
     }
   }
-  
+
+
   const TimeSliderBox = () => {
-    const [isBoxOpen, setIsBoxOpen] = useState(false);
-
-    const boxRef = React.useRef(null);
-    const boxElement = document.querySelectorAll(".time-box-container")[0];
-    if (boxElement !== null && boxElement !== undefined) {
-      boxRef.current = boxElement;
-    }
-
-    console.log("boxRef", boxElement);
+    const elementRef = React.useRef(null);
 
     // Toggle the box visibility
     const toggleBox = () => {
-      setIsBoxOpen(!isBoxOpen);
+      setIsTimeBoxOpen(!isTimeBoxOpen);
     };
   
     // Handle slider change
     const handleSliderChange = (event) => {
       setTimeToMake(event.target.value);
     };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsTimeBoxOpen(false);
+      }
+    };
   
-    // Close the box when clicking outside
     React.useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (boxRef.current && !boxRef.current.contains(event.target)) {
-          setIsBoxOpen(false);
-        }
-      };
-  
+      // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
+
   
     return (
-      <div className="time-button-container">
+      <div className="time-button-container"
+      ref={elementRef}>
         <button className="advanced-search-button" style={{width:"150px"}} onClick={toggleBox}>
-          {isBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
+          {isTimeBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
         </button>
-        {isBoxOpen && (
+        {isTimeBoxOpen && (
           <div
-            ref={boxRef}
             className="time-box-container"
           >
             <input
@@ -178,61 +203,61 @@ React.useEffect(() => {
 
 
   const TagsDropdownBox = () => {
-    const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const dropdownRef = React.useRef(null);
-  
-    const toggleBox = () => {
-      setIsBoxOpen((prev) => !prev);
+    const elementRef = React.useRef(null);
+
+    const toggleTagsBox = () => {
+      setIsTagsBoxOpen(!isTagsBoxOpen);
     };
 
     const handleItemClick = (item) => {
-
+      setIsTagsBoxOpen(true);
       if (tags.includes(item)) {
         setTags((prevTags) => prevTags.filter((tag) => tag !== item));
       }
       else {
         setTags((prevTags) => [...prevTags, item]);
       }
-      };
+    };
   
     const getDisplayText = () => {
       if (tags.length === 0) return "Tags";
       if (tags.length <= 2) return tags.join(", ");
       return `${tags.slice(0, 2).join(", ")}...`;
     };
-  
+
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsBoxOpen(false);
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsTagsBoxOpen(false);
       }
     };
   
     React.useEffect(() => {
+      // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
-  
-    const options = ["japanese", "spicy", "meat", "vegitarian"];
-  
+
     return (
-      <div className="tags-button-container" ref={dropdownRef}>
+      <div className="tags-button-container"
+      ref={elementRef}>
         <button
           className="advanced-search-button"
-          style={{ pointerEvents: "auto" }}
-          onClick={toggleBox}
+          onClick={toggleTagsBox}
         >
           {getDisplayText()}
         </button>
-        {isBoxOpen && (
+        {isTagsBoxOpen && (
           <ul className="tags-box-container">
-            {options.map((option, index) => (
+            {all_tags.map((option, index) => (
               <li
               className="option-label"
-              onClick={() => handleItemClick(option)}
+              onClick={(e) => handleItemClick(option)}
               >
-                {option}
+                {tags.includes(option) ? `${option} ✔️` : option}
               </li>
               ))}
           </ul>

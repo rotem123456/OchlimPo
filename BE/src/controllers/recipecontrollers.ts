@@ -82,5 +82,22 @@ export const recipecontrollers = {
         } catch (error) {
             res.status(400).json({ error: 'Failed to get recipes from query' });
         }
-    }
+    },
+
+    getAllTags: async (req: Request, res: Response) => {
+      try {
+        const tags: { enumlabel: string }[] = await prisma.$queryRaw`
+          SELECT enumlabel
+          FROM pg_enum
+          WHERE enumtypid = (
+            SELECT oid
+            FROM pg_type
+            WHERE typname = 'FoodType'
+          );
+        `;
+        res.json(tags.map((tag) => tag.enumlabel));
+      } catch (error) {
+        res.status(400).json({ error: 'Failed to get tags from query' });
+      }
+  }
 }
