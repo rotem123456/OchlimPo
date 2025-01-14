@@ -74,6 +74,7 @@ const MainPage = () => {
     return;
   }
 
+  console.log("tags:", tags);
   try {
     const response = await fetch(`${BEpath}/recipe/search`, {
       method: "POST",
@@ -106,7 +107,7 @@ const MainPage = () => {
   // Call search directly when query changes
   React.useEffect(() => {
     handleSearch();
-  }, [inputValue, timeToMake]); // Trigger search whenever query changes
+  }, [inputValue, timeToMake, tags, ingredients]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -514,6 +515,11 @@ const MainPage = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
+          <button className="clear-search-button">
+            <span role="img" aria-label="search">
+              x
+            </span>
+          </button>
         </div>
         <ResultsFilterDropdownBox />
         <TimeSliderBox />
