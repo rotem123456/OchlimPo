@@ -433,16 +433,16 @@ const MainPage = () => {
   {user ? (
     <>
     <button onClick={logout} className="main-upload-button">
-    <img
-        src="/images/plus-sign.png"
-        style={{ 
-          width: '28px', 
-          height: '28px',
-          alignItems: 'left',
-          display: 'inline-block',
-         }}
-      ></img>
-      Upload Recipe
+      <img
+          src="/images/plus-sign.png"
+          style={{ 
+            width: '28px', 
+            height: '28px',
+            alignItems: 'left',
+            display: 'inline-block',
+          }}
+        ></img>
+        <span>Upload Recipe</span>
     </button>
     <img
         src="/images/user-icon.png"
