@@ -18,6 +18,7 @@ const MainPage = () => {
   const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
   const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
   const [isIngredientsBoxOpen, setIsIngredientsBoxOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
 
   // Other things in page
@@ -431,8 +432,34 @@ const MainPage = () => {
       <div className="top-right-buttons">
   {user ? (
     <>
-      <span className="user-name">Welcome, {user.name}!</span>
-      <button onClick={logout} className="login-button">Logout</button>
+    <button onClick={logout} className="main-upload-button">
+    <img
+        src="/images/plus-sign.png"
+        style={{ 
+          width: '28px', 
+          height: '28px',
+          alignItems: 'left',
+          display: 'inline-block',
+         }}
+      ></img>
+      Upload Recipe
+    </button>
+    <img
+        src="/images/user-icon.png"
+        alt="user-icon"
+        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+        style={{ cursor: 'pointer' }}
+        className="user-menu"
+      />
+      {isUserMenuOpen && (
+          <div
+            className="user-menu-box-container"
+          >
+            <span className="user-name">Welcome, {user.name}!</span>
+          <button onClick={logout} className="login-button" style={{ right: "0px" }}>Logout</button>
+          </div>
+        )}
+      
     </>
   ) : (
     <>
@@ -515,11 +542,11 @@ const MainPage = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
-          <button className="clear-search-button">
+          {(inputValue.length > 0) && (<button className="clear-search-button" onClick={() => setInputValue("")}>
             <span role="img" aria-label="search">
               x
             </span>
-          </button>
+          </button>)}
         </div>
         <ResultsFilterDropdownBox />
         <TimeSliderBox />

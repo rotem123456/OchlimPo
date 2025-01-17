@@ -9,6 +9,8 @@ import SecondPage from "./components/SecondPage/SecondPage";
 import Login from "./components/LoginPage/LoginPage";
 import SignUp from "./components/LoginPage/SignUpPage";
 import Weather from "./components/WeatherPage/weather";
+import RecipeUpload from "./components/UploadRecipePage/UploadRecipesPage";
+
 import "./App.css";
 
 
@@ -30,7 +32,7 @@ const Navigation = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav style={{ padding: "10px", background: "#eee" }}>
+    <nav style={{ padding: "0px", background: "#eee" }}>
       <Link to="/" style={{ marginRight: "15px" }}>Main</Link>
       <Link to="/second" style={{ marginRight: "15px" }}>Second Page</Link>
       

@@ -1,8 +1,8 @@
 /* General container layout */
 
 /* Background styles */
-.background {
-    background-image: url("../../public/backrecipe/backrecipe.jpg");
+.backgroundUpload {
+    background-image: url("../../../public/images/backrecipe.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
