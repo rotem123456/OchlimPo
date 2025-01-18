@@ -80,7 +80,7 @@ const RecipeUpload = () => {
 
 
     return (
-        <div className="background">
+        <div className="backgroundUpload">
             <div className="container">
                 {/* גלריה בצד שמאל */}
                 <div className="gallery-section">

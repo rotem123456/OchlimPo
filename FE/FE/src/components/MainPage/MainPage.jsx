@@ -11,7 +11,15 @@ const MainPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [timeToMake, setTimeToMake] = useState(60);
   const [ingredients, setIngredients] = useState("");
+  const [all_tags, setAllTags] = useState([]);
+  const [all_ingredients, setAllIngredients] = useState([]);
   const [tags, setTags] = useState([]);
+  const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
+  const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
+  const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
+  const [isIngredientsBoxOpen, setIsIngredientsBoxOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
 
   // Other things in page
   const [recipes, setRecipes] = useState([]);
@@ -22,6 +30,44 @@ const MainPage = () => {
   const {user,logout} = useAuth();
   let state =  false;
 
+  const fetchTags = async () => {
+    try {
+      const response = await fetch(`${BEpath}/recipe/tags`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+      });
+  
+      const data = await response.json();
+      setAllTags(data);
+    } catch (error) {
+      console.error("Tags fetch error:", error);
+      setAllTags([]);
+    }
+  };
+
+  const fetchIngredients = async () => {
+    try {
+      const response = await fetch(`${BEpath}/recipe/ingredients`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+      });
+  
+      const data = await response.json();
+
+      console.log("ings:", data);
+      setAllIngredients(data);
+    } catch (error) {
+      console.error("Tags fetch error:", error);
+      setAllIngredients([]);
+    }
+  };
+
  const handleSearch = async () => {
   if (inputValue.length === 0) 
   {
@@ -29,6 +75,7 @@ const MainPage = () => {
     return;
   }
 
+  console.log("tags:", tags);
   try {
     const response = await fetch(`${BEpath}/recipe/search`, {
       method: "POST",
@@ -39,7 +86,8 @@ const MainPage = () => {
       body: JSON.stringify({
         name: inputValue,
         maxTime: timeToMake,
-        tags: tags
+        tags: tags,
+        ingredients: ingredients
       }),
     });
 
@@ -52,10 +100,16 @@ const MainPage = () => {
   }
 };
 
-// Call search directly when query changes
-React.useEffect(() => {
-  handleSearch();
-}, [inputValue, timeToMake]); // Trigger search whenever query changes
+  // This will be called every time the page is loaded
+  React.useEffect(() => {
+    fetchTags();
+    fetchIngredients();
+  }, []);
+
+  // Call search directly when query changes
+  React.useEffect(() => {
+    handleSearch();
+  }, [inputValue, timeToMake, tags, ingredients]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -107,50 +161,116 @@ React.useEffect(() => {
       return text;
     }
   }
+
+
+  const ResultsFilterDropdownBox = () => {
+    const elementRef = React.useRef(null);
+    const filterOptions = [
+      "Newest",
+      "Oldest",
+      "Fastest",
+      "Slowest",
+      "Least Ingredients",
+      "Most Ingredients",
+    ];
+
+    const toggleFilterBox = () => {
+      setIsFilterBoxOpen(!isFilterBoxOpen);
+    };
+
+    const handleItemClick = (item) => {
+      setIsFilterBoxOpen(true);
+      // add here
+    };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsFilterBoxOpen(false);
+      }
+    };
   
+    React.useEffect(() => {
+      // Attach event listener to the document
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="filter-button-container"
+      ref={elementRef}>
+        <button
+          className="advanced-search-button"
+          onClick={toggleFilterBox}
+        >
+           <img
+            src="/images/filter-32.png"
+            style={{
+              maxWidth: '30px',
+              maxHeight: '30px',
+              width: '50%',
+              height: 'auto'
+            }}
+            />
+        </button>
+        {isFilterBoxOpen && (
+          <ul className="filter-box-container">
+            {filterOptions.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={(e) => handleItemClick(option)}
+              id = {index}
+              >
+                {tags.includes(option) ? `${option} ✔️` : option}
+              </li>
+              ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
   const TimeSliderBox = () => {
-    const [isBoxOpen, setIsBoxOpen] = useState(false);
-
-    const boxRef = React.useRef(null);
-    const boxElement = document.querySelectorAll(".time-box-container")[0];
-    if (boxElement !== null && boxElement !== undefined) {
-      boxRef.current = boxElement;
-    }
-
-    console.log("boxRef", boxElement);
+    const elementRef = React.useRef(null);
 
     // Toggle the box visibility
     const toggleBox = () => {
-      setIsBoxOpen(!isBoxOpen);
+      setIsTimeBoxOpen(!isTimeBoxOpen);
     };
   
     // Handle slider change
     const handleSliderChange = (event) => {
       setTimeToMake(event.target.value);
     };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsTimeBoxOpen(false);
+      }
+    };
   
-    // Close the box when clicking outside
     React.useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (boxRef.current && !boxRef.current.contains(event.target)) {
-          setIsBoxOpen(false);
-        }
-      };
-  
+      // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
+
   
     return (
-      <div className="time-button-container">
+      <div className="time-button-container"
+      ref={elementRef}>
         <button className="advanced-search-button" style={{width:"150px"}} onClick={toggleBox}>
-          {isBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
+          {isTimeBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
         </button>
-        {isBoxOpen && (
+        {isTimeBoxOpen && (
           <div
-            ref={boxRef}
             className="time-box-container"
           >
             <input
@@ -178,61 +298,127 @@ React.useEffect(() => {
 
 
   const TagsDropdownBox = () => {
-    const [isBoxOpen, setIsBoxOpen] = useState(false);
-    const dropdownRef = React.useRef(null);
-  
-    const toggleBox = () => {
-      setIsBoxOpen((prev) => !prev);
+    const elementRef = React.useRef(null);
+
+    const toggleTagsBox = () => {
+      setIsTagsBoxOpen(!isTagsBoxOpen);
     };
 
     const handleItemClick = (item) => {
-
+      setIsTagsBoxOpen(true);
       if (tags.includes(item)) {
         setTags((prevTags) => prevTags.filter((tag) => tag !== item));
       }
       else {
         setTags((prevTags) => [...prevTags, item]);
       }
-      };
+    };
   
     const getDisplayText = () => {
       if (tags.length === 0) return "Tags";
       if (tags.length <= 2) return tags.join(", ");
       return `${tags.slice(0, 2).join(", ")}...`;
     };
-  
+
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsBoxOpen(false);
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsTagsBoxOpen(false);
       }
     };
   
     React.useEffect(() => {
+      // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
-  
-    const options = ["japanese", "spicy", "meat", "vegitarian"];
-  
+
     return (
-      <div className="tags-button-container" ref={dropdownRef}>
+      <div className="tags-button-container"
+      ref={elementRef}>
         <button
           className="advanced-search-button"
-          style={{ pointerEvents: "auto" }}
-          onClick={toggleBox}
+          onClick={toggleTagsBox}
         >
           {getDisplayText()}
         </button>
-        {isBoxOpen && (
+        {isTagsBoxOpen && (
           <ul className="tags-box-container">
-            {options.map((option, index) => (
+            {all_tags.map((option, index) => (
               <li
               className="option-label"
-              onClick={() => handleItemClick(option)}
+              onClick={(e) => handleItemClick(option)}
+              id = {index}
               >
-                {option}
+                {tags.includes(option) ? `${option} ✔️` : option}
+              </li>
+              ))}
+          </ul>
+        )}
+      </div>
+    );
+  };
+
+  const IngredientsDropdownBox = () => {
+    const elementRef = React.useRef(null);
+
+    const toggleIngredientsBox = () => {
+      setIsIngredientsBoxOpen(!isIngredientsBoxOpen);
+    };
+
+    const handleItemClick = (item) => {
+      setIsIngredientsBoxOpen(true);
+      if (ingredients.includes(item)) {
+        setIngredients((prevIngredients) => prevIngredients.filter((ing) => ing !== item));
+      }
+      else {
+        setIngredients((prevIngredients) => [...prevIngredients, item]);
+      }
+    };
+  
+    const getDisplayText = () => {
+      if (ingredients.length === 0) return "Ingredients";
+      if (ingredients.length <= 2) return ingredients.join(", ");
+      return `${ingredients.slice(0, 2).join(", ")}...`;
+    };
+
+    const handleClickOutside = (event) => {
+      if (elementRef.current && !elementRef.current.contains(event.target)) {
+        setIsIngredientsBoxOpen(false);
+      }
+    };
+  
+    React.useEffect(() => {
+      // Attach event listener to the document
+      document.addEventListener("mousedown", handleClickOutside);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="ingredients-button-container"
+      ref={elementRef}>
+        <button
+          className="advanced-search-button"
+          onClick={toggleIngredientsBox}
+        >
+          {getDisplayText()}
+        </button>
+        {isIngredientsBoxOpen && (
+          <ul className="ingredients-box-container">
+            {all_ingredients.map((option, index) => (
+              <li
+              className="option-label"
+              onClick={(e) => handleItemClick(option)}
+              id = {index}
+              >
+                {ingredients.includes(option) ? `${option} ✔️` : option}
               </li>
               ))}
           </ul>
@@ -247,14 +433,42 @@ React.useEffect(() => {
       <div className="top-right-buttons">
   {user ? (
     <>
-      <span className="user-name">Welcome, {user.name}!</span>
-      <button onClick={logout} className="login-button">Logout</button>
+    <button onClick={() => navigate("/upload")} className="main-upload-button">
+      <img
+          src="/images/plus-sign.png"
+          style={{
+            width: '22px',
+            height: '22px',
+            display: 'inline-block',
+          }}
+        ></img>
+        <span style={{marginLeft: "10px", marginTop: "0px"}}>Create</span>
+    </button>
+    <img
+        src="/images/user-icon.png"
+        alt="user-icon"
+        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+        style={{ 
+          width: '50px',
+          height: '50px',
+          cursor: 'pointer' 
+        }}
+        className="user-menu"
+      />
+      {isUserMenuOpen && (
+          <div
+            className="user-menu-box-container"
+          >
+            <span className="user-name">Welcome, {user.name}!</span>
+          <button onClick={logout} className="logout-button" style={{ right: "0px" }}>Logout</button>
+          </div>
+        )}
+      
     </>
   ) : (
     <>
-      <button onClick={() => navigate('/signup')} className="login-button">Sign up</button>
-      <button onClick={() => navigate('/login')} className="login-button">Log in</button>
-      <button onClick={() => navigate('/weather')} className="login-button">SURPRISE ME</button>
+      <button onClick={() => navigate('/signup')} className="signup-button-main">Sign up</button>
+      <button onClick={() => navigate('/login')} className="login-button-main">Log in</button>
     </>
   )}
 </div>
@@ -332,9 +546,24 @@ React.useEffect(() => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
+          {(inputValue.length > 0) && (<button className="clear-search-button" onClick={() => setInputValue("")}>
+            <span role="img" aria-label="search">
+              x
+            </span>
+          </button>)}
         </div>
+        <ResultsFilterDropdownBox />
         <TimeSliderBox />
         <TagsDropdownBox />
+        <IngredientsDropdownBox />
+        <div className="surprise-button-container">
+           <button onClick={() => navigate('/weather')} 
+            className="advanced-search-button"
+            style={{width:"165%"}}
+            >
+            I'm Feeling Lazy...
+           </button>
+        </div>
         <div className="search-results">
           {searchResults.length > 0 ? (
             searchResults.map((recipe, index) => (

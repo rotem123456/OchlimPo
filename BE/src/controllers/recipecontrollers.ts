@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
+
 const now = new Date();
 
 const prisma = new PrismaClient();
@@ -69,18 +70,63 @@ export const recipecontrollers = {
 
         try {
           const maxTime = parseInt(req.body.maxTime, 10);
+          const tagsArray = req.body.tags.map((tag: string) => `'${tag.replace(/'/g, "''")}'`).join(',');
+          const ingredientsArray = req.body.ingredients.map((ing: string) => `'${ing.replace(/'/g, "''")}'`).join(',');
+
           const recipes = await prisma.$queryRaw`
           SELECT * FROM "Recipe"
           JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
           JOIN (SELECT "recipeId", array_agg("type") AS tags FROM "RecipeType" GROUP BY "recipeId") AS "RecipeTags" ON "RecipeTags"."recipeId" = "Recipe"."id"
-          WHERE "Recipe"."name" ILIKE ${'%' + req.body.name + '%'}
+          JOIN (SELECT "recipeId", array_agg("ingridient") AS ingredients FROM "Ingredient" GROUP BY "recipeId") AS "IngredientTags" ON "IngredientTags"."recipeId" = "Recipe"."id"
+          WHERE (
+              "Recipe"."name" ILIKE ${'%' + req.body.name + '%'}
+              OR "Recipe"."shortDescription" ILIKE ${'%' + req.body.name + '%'}
+            )
             AND CAST("Recipe"."time" AS INTEGER) > 0
             AND CAST("Recipe"."time" AS INTEGER) < ${maxTime}
-        `;
+            AND CAST(tags AS TEXT[]) @> CAST(ARRAY[${Prisma.raw(tagsArray)}] AS TEXT[])
+            AND CAST(ingredients AS TEXT[]) @> CAST(ARRAY[${Prisma.raw(ingredientsArray)}] AS TEXT[])
+          LIMIT 20;
+          `;
+
             res.json(recipes);
 
         } catch (error) {
             res.status(400).json({ error: 'Failed to get recipes from query' });
         }
+    },
+
+    getAllTags: async (req: Request, res: Response) => {
+      try {
+        const tags: { enumlabel: string }[] = await prisma.$queryRaw`
+          SELECT enumlabel
+          FROM pg_enum
+          WHERE enumtypid = (
+            SELECT oid
+            FROM pg_type
+            WHERE typname = 'FoodType'
+          );
+        `;
+        res.json(tags.map((tag) => tag.enumlabel));
+      } catch (error) {
+        res.status(400).json({ error: 'Failed to get tags from query' });
+      }
+  },
+
+  getAllIngredients: async (req: Request, res: Response) => {
+    try {
+      const ings: { enumlabel: string }[] = await prisma.$queryRaw`
+        SELECT enumlabel
+        FROM pg_enum
+        WHERE enumtypid = (
+          SELECT oid
+          FROM pg_type
+          WHERE typname = 'Ingredients'
+        );
+      `;
+      res.json(ings.map((ing) => ing.enumlabel));
+    } catch (error) {
+      res.status(400).json({ error: 'Failed to get ingredients from query' });
     }
+  }
 }
