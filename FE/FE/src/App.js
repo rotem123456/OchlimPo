@@ -72,6 +72,7 @@ const AppRoutes = () => {
       <Route path="/blogger" element={<BloggerPage />} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/weather" element = {<Weather/>} />
+      <Route path="/upload" element={<RecipeUpload />} />
       
       {/* Protected Routes */}
       <Route 

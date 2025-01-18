@@ -86,7 +86,8 @@ const MainPage = () => {
       body: JSON.stringify({
         name: inputValue,
         maxTime: timeToMake,
-        tags: tags
+        tags: tags,
+        ingredients: ingredients
       }),
     });
 
@@ -432,23 +433,26 @@ const MainPage = () => {
       <div className="top-right-buttons">
   {user ? (
     <>
-    <button onClick={logout} className="main-upload-button">
+    <button onClick={() => navigate("/upload")} className="main-upload-button">
       <img
           src="/images/plus-sign.png"
-          style={{ 
-            width: '28px', 
-            height: '28px',
-            alignItems: 'left',
+          style={{
+            width: '22px',
+            height: '22px',
             display: 'inline-block',
           }}
         ></img>
-        <span>Upload Recipe</span>
+        <span style={{marginLeft: "10px", marginTop: "0px"}}>Create</span>
     </button>
     <img
         src="/images/user-icon.png"
         alt="user-icon"
         onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-        style={{ cursor: 'pointer' }}
+        style={{ 
+          width: '50px',
+          height: '50px',
+          cursor: 'pointer' 
+        }}
         className="user-menu"
       />
       {isUserMenuOpen && (
@@ -456,15 +460,15 @@ const MainPage = () => {
             className="user-menu-box-container"
           >
             <span className="user-name">Welcome, {user.name}!</span>
-          <button onClick={logout} className="login-button" style={{ right: "0px" }}>Logout</button>
+          <button onClick={logout} className="logout-button" style={{ right: "0px" }}>Logout</button>
           </div>
         )}
       
     </>
   ) : (
     <>
-      <button onClick={() => navigate('/signup')} className="login-button">Sign up</button>
-      <button onClick={() => navigate('/login')} className="login-button">Log in</button>
+      <button onClick={() => navigate('/signup')} className="signup-button-main">Sign up</button>
+      <button onClick={() => navigate('/login')} className="login-button-main">Log in</button>
     </>
   )}
 </div>
