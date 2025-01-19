@@ -142,12 +142,12 @@
 .search-box {
   display: flex;
   align-items: center;
-  width: 180%;
-  max-width: 600px;
+  min-width: 90%;
 }
 
 .search-container {
   position: absolute;
+  width: 32%;
   top: 10%;
   left: 35%;
   margin-bottom: 20px;
@@ -181,7 +181,7 @@
 .clear-search-button {
   position: absolute;
   display: block;
-  right: -73%;
+  right: 3%;
   border: none;
   background: none;
   cursor: pointer;
@@ -208,7 +208,7 @@
   display: inline-block;
   width: auto;
   position: absolute;
-  left: 11%;
+  left: 6%;
 }
 
 .filter-box-container {
@@ -232,7 +232,7 @@
   display: inline-block;
   width: auto;
   position: absolute;
-  left: 40.5%;
+  left: 22.5%;
 }
 
 .time-box-container {
@@ -252,7 +252,7 @@
   display: inline-block;
   width: auto;
   position: absolute;
-  left: 85%;
+  left: 47.3%;
 }
 
 .tags-box-container {
@@ -276,7 +276,7 @@
   display: inline-block;
   width: auto;
   position: absolute;
-  left: 115%;
+  left: 63.7%;
 }
 
 .ingredients-box-container {
@@ -314,16 +314,19 @@
 
 .surprise-button-container {
   display: inline-block;
-  width: auto;
+  width: 12%;
   position: absolute;
-  left: 144.8%;
+  left: 80.2%;
 }
 
 .search-results {
-  right: -12%;
+  right: -6%;
   top: 220%;
-  width: 100%;
   position: absolute;
+  min-width: 100%;
+  max-height: 700%;
+  overflow-y: scroll;
+  overflow-x: hidden;
   z-index: 500;
 }
 
@@ -333,7 +336,7 @@
   text-align: left;
   background-color: white;
   height: 100px;
-  width: 160%;
+  width: 93%;
 }
 
 .recipe-item-title {
@@ -369,7 +372,7 @@
   position: absolute;
   text-align: left !important;
   top:75%;
-  left: 20%;
+  left: 22%;
   padding: 0;
   margin: 0;
 }
@@ -378,7 +381,7 @@
   position: absolute;
   text-align: left !important;
   top: 75%;
-  left: 40%;
+  left: 52%;
   padding: 0;
   margin: 0;
 }
@@ -470,7 +473,6 @@
   display: inline-block;
   transition: all 0.3s ease;
 }
-
 
 .user-menu-box-container {
   margin-top: 28%;
