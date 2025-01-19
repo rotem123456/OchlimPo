@@ -12,6 +12,13 @@ interface AuthenticatedRequest extends Request {
     };
   }
 
+const orderByMap = new Map([
+  ['Newest', ['"Recipe"."updatedAt"', 'DESC']],
+  ['Oldest', ['"Recipe"."updatedAt"', 'ASC']],
+  ['Fastest', ['CAST("Recipe"."time" AS INTEGER)', 'ASC']],
+  ['Slowest', ['CAST("Recipe"."time" AS INTEGER)', 'DESC']],
+]);
+
 export const recipecontrollers = {
     createRecipe: async (req: AuthenticatedRequest, res: Response) => {
         try {
@@ -73,6 +80,12 @@ export const recipecontrollers = {
           const tagsArray = req.body.tags.map((tag: string) => `'${tag.replace(/'/g, "''")}'`).join(',');
           const ingredientsArray = req.body.ingredients.map((ing: string) => `'${ing.replace(/'/g, "''")}'`).join(',');
 
+          // Set a default value in case the value is not in the map
+          const orderCol = orderByMap.get(req.body.appliedOrder)?.[0] ?? 'updatedAt';
+          const orderDirection = orderByMap.get(req.body.appliedOrder)?.[1] ?? 'DESC';
+          console.log(orderCol, orderDirection);
+
+
           const recipes = await prisma.$queryRaw`
           SELECT * FROM "Recipe"
           JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
@@ -86,12 +99,14 @@ export const recipecontrollers = {
             AND CAST("Recipe"."time" AS INTEGER) < ${maxTime}
             AND CAST(tags AS TEXT[]) @> CAST(ARRAY[${Prisma.raw(tagsArray)}] AS TEXT[])
             AND CAST(ingredients AS TEXT[]) @> CAST(ARRAY[${Prisma.raw(ingredientsArray)}] AS TEXT[])
+          ORDER BY ${Prisma.raw(orderCol)} ${Prisma.raw(orderDirection)}
           LIMIT 20;
           `;
 
             res.json(recipes);
 
         } catch (error) {
+            console.log(error);
             res.status(400).json({ error: 'Failed to get recipes from query' });
         }
     },

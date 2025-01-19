@@ -9,11 +9,13 @@ const MainPage = () => {
   // Search values
   const [inputValue, setInputValue] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [errorInSearch, setErrorInSearch] = useState(false);
   const [timeToMake, setTimeToMake] = useState(60);
-  const [ingredients, setIngredients] = useState("");
+  const [ingredients, setIngredients] = useState([]);
   const [all_tags, setAllTags] = useState([]);
   const [all_ingredients, setAllIngredients] = useState([]);
   const [tags, setTags] = useState([]);
+  const [appliedOrder, setappliedOrder] = useState("Newest");
   const [isFilterBoxOpen, setIsFilterBoxOpen] = useState(false);
   const [isTimeBoxOpen, setIsTimeBoxOpen] = useState(false);
   const [isTagsBoxOpen, setIsTagsBoxOpen] = useState(false);
@@ -59,11 +61,9 @@ const MainPage = () => {
       });
   
       const data = await response.json();
-
-      console.log("ings:", data);
       setAllIngredients(data);
     } catch (error) {
-      console.error("Tags fetch error:", error);
+      console.error("Ingredients fetch error:", error);
       setAllIngredients([]);
     }
   };
@@ -87,15 +87,25 @@ const MainPage = () => {
         name: inputValue,
         maxTime: timeToMake,
         tags: tags,
-        ingredients: ingredients
+        ingredients: ingredients,
+        appliedOrder: appliedOrder,
       }),
     });
 
     const data = await response.json();
     console.log("Advanced search results:", data);
-    setSearchResults(data);
+    if (data.error) {
+      setErrorInSearch(true);
+      setSearchResults([]);
+      return;
+    }
+    else {
+      setErrorInSearch(false);
+      setSearchResults(data);
+    }
   } catch (error) {
     console.error("Advanced search error:", error);
+    setErrorInSearch(true);
     setSearchResults([]);
   }
 };
@@ -109,7 +119,7 @@ const MainPage = () => {
   // Call search directly when query changes
   React.useEffect(() => {
     handleSearch();
-  }, [inputValue, timeToMake, tags, ingredients]); // Trigger search whenever query changes
+  }, [inputValue, timeToMake, tags, ingredients, appliedOrder]); // Trigger search whenever query changes
 
   const openModal = () => {
     setShowModal(true);
@@ -170,8 +180,6 @@ const MainPage = () => {
       "Oldest",
       "Fastest",
       "Slowest",
-      "Least Ingredients",
-      "Most Ingredients",
     ];
 
     const toggleFilterBox = () => {
@@ -180,7 +188,13 @@ const MainPage = () => {
 
     const handleItemClick = (item) => {
       setIsFilterBoxOpen(true);
-      // add here
+      
+      if (filterOptions.includes(item)) {
+        setappliedOrder(item);
+      }
+      else {
+        setappliedOrder("Newest");
+      }
     };
 
     const handleClickOutside = (event) => {
@@ -224,7 +238,7 @@ const MainPage = () => {
               onClick={(e) => handleItemClick(option)}
               id = {index}
               >
-                {tags.includes(option) ? `${option} ✔️` : option}
+                {appliedOrder === option ? `${option} ✔️` : option}
               </li>
               ))}
           </ul>
@@ -565,19 +579,27 @@ const MainPage = () => {
            </button>
         </div>
         <div className="search-results">
-          {searchResults.length > 0 ? (
+          {((searchResults.length > 0) && (inputValue.length > 0) && !errorInSearch) ? (
             searchResults.map((recipe, index) => (
               <div key={index} className="recipe-item">
                 <h3 className="recipe-item-title">{recipe.name}</h3>
-                <p className="recipe-item-description">{recipe.shortDescription}</p>
+                <p className="recipe-item-description">{truncateText(recipe.shortDescription, 117)}</p>
                 <p className="recipe-item-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
                 <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
-                <p className="recipe-item-user">👨‍🍳 {recipe.username}</p>
+                <p className="recipe-item-user">👨‍🍳 {truncateText(recipe.username, 17)}</p>
                 <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 17)}</p>
               </div>
             ))
           ) : (
-            <p></p>
+            ((searchResults.length === 0) && (inputValue.length > 0)) &&
+            <div key="1" className="recipe-item">
+                <h3 className="recipe-item-title">
+                  {(errorInSearch) ? ("An Error Occured During Search") : ("No Recipes Found")}
+                  </h3>
+                <p className="recipe-item-description" style={{marginTop: "2%"}}>
+                  {(errorInSearch) ? ("Please try again on a different time :)") : ("You can explore different filters to match your taste")}
+                  </p>
+              </div>
           )}
         </div>
       </div>
