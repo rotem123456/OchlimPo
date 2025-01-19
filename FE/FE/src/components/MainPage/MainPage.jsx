@@ -469,6 +469,7 @@ const MainPage = () => {
         }}
         className="user-menu"
       />
+      
       {isUserMenuOpen && (
           <div
             className="user-menu-box-container"
@@ -586,10 +587,10 @@ const MainPage = () => {
                 <p className="recipe-item-description">{truncateText(recipe.shortDescription, 117)}</p>
                 <p className="recipe-item-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
                 <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
-                <p className="recipe-item-user">👨‍🍳 {truncateText(recipe.username, 17)}</p>
-                <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 17)}</p>
+                <p className="recipe-item-user">👨‍🍳 {truncateText(recipe.username, 10)}</p>
+                <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 14)}</p>
               </div>
-            ))
+            )) 
           ) : (
             ((searchResults.length === 0) && (inputValue.length > 0)) &&
             <div key="1" className="recipe-item">
