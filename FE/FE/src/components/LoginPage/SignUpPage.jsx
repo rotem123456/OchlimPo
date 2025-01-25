@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../context/AuthContext";
 import "./Loginpage.css";
 
 
@@ -11,6 +12,7 @@ const SignUp = () => {
   const [password2, setPassword2] = useState("");
   const navigate = useNavigate();
   const BEpath = "http://localhost:4000";
+  const { login } = useAuth();
 
 
   const handleTypeSelect = (selectedType) => {
@@ -55,8 +57,6 @@ const SignUp = () => {
 
   const addUser = async (name) => {
     alert(`Welcome ${name} to OchlimPo`);
-    await sleep(5000);
-    navigate('/');
   };
 
   const handleSubmit = async (e) => {
@@ -73,6 +73,11 @@ const SignUp = () => {
       
       if (response.ok) {
         await addUser(name);
+        const data = await response.json();
+        login(data.user,data.token)
+        sleep(1000)
+        navigate('/')
+
       }
     } catch (error) {
       console.error("SignUp Failed", error);
