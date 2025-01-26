@@ -150,6 +150,10 @@ model User {
   updatedAt DateTime @updatedAt
   type      UserType
   recipe Recipe[] 
+  fromLikes UserLikes[]  @relation("FromUser")
+  toLikes   UserLikes[]  @relation("ToUser")
+  recipeLikes RecipeLikes[]
+
   userScore Int  @default(0)
   userSaved Int  @default(0)
 }
@@ -159,8 +163,9 @@ model Recipe {
  name        String
  time        String 
  shortDescription String @default("No Description Added")
- tags        RecipeType[]  
- ingredients Ingredient[]   
+ tags        RecipeType[]
+ ingredients Ingredient[]
+ userLikes        RecipeLikes[]
  user     User @relation(fields: [userId], references: [id])
  userId Int
  createdAt   DateTime    @default(now())
@@ -186,3 +191,20 @@ model Ingredient {
    @@index([recipeId])
 }
 
+model RecipeLikes {
+  recipeId    Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  userId Int
+  user     User @relation(fields: [userId], references: [id])
+   @@unique([userId, recipeId]) // Ensures a user cannot like the same recipe multiple times
+}
+
+model UserLikes {
+  id          Int    @id @default(autoincrement())
+  fromUserId  Int
+  toUserId    Int
+  createdAt   DateTime @default(now())
+  fromUser    User   @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser      User   @relation("ToUser", fields: [toUserId], references: [id])
+  @@unique([fromUserId, toUserId]) // Ensures a user cannot like the same user multiple times
+}

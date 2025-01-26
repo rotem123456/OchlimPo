@@ -10,6 +10,7 @@ import Login from "./components/LoginPage/LoginPage";
 import SignUp from "./components/LoginPage/SignUpPage";
 import Weather from "./components/WeatherPage/weather";
 import RecipeUpload from "./components/UploadRecipePage/UploadRecipesPage";
+import ExplorePage from "./components/ExplorePage/ExplorePage";
 
 import "./App.css";
 
@@ -38,9 +39,9 @@ const Navigation = () => {
       
       {user ? (
         <>
-          {(user.type === 'VIEWER') && (<Link to="/viewer" style={{ marginRight: "15px" }}>Viewer</Link>)}
+          {(user.type === 'VIEWER') && (<Link to="/explore" style={{ marginRight: "15px" }}>Explore</Link>)}
           
-          {(user.type === 'BLOGGER') && (<Link to="/blogger" style={{ marginRight: "15px" }}>Blogger</Link>)}
+          {(user.type === 'BLOGGER') && (<Link to="/explore" style={{ marginRight: "15px" }}>Explore</Link>)}
 
           {user.type === 'POSTER' && (<Link to="/admin" style={{ marginRight: "15px" }}>Admin</Link> )}
 
@@ -54,6 +55,7 @@ const Navigation = () => {
           <Link to="/login" style={{ marginRight: "15px" }}>Login</Link>
           <Link to="/signup" style={{ marginRight: "15px" }}>Sign Up</Link>
           <Link to="/weather" style={{ marginRight: "15px" }}>Weather</Link>
+          <Link to="/explore" style={{ marginRight: "15px" }}>Explore</Link>
 
         </>
       )}
@@ -73,6 +75,7 @@ const AppRoutes = () => {
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/weather" element = {<Weather/>} />
       <Route path="/upload" element={<RecipeUpload />} />
+      <Route path="/explore" element={<ExplorePage />} />
       
       {/* Protected Routes */}
       <Route 
