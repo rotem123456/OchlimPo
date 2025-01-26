@@ -143,5 +143,33 @@ export const recipecontrollers = {
     } catch (error) {
       res.status(400).json({ error: 'Failed to get ingredients from query' });
     }
-  }
+  },
+
+  getRecipeFeed: async (req:Request, res: Response) => {
+
+    try {
+      const id = req.params.id;
+      const recipes = await prisma.$queryRaw`
+      SELECT * FROM "Recipe"
+      JOIN (SELECT "id", "name" AS UserName FROM "User") AS "UserWithID" ON "UserWithID"."id" = "Recipe"."userId"
+      JOIN (SELECT "recipeId", array_agg("type") AS tags FROM "RecipeType" GROUP BY "recipeId") AS "RecipeTags" ON "RecipeTags"."recipeId" = "Recipe"."id"
+      JOIN (SELECT "recipeId", array_agg("ingridient") AS ingredients FROM "Ingredient" GROUP BY "recipeId") AS "IngredientTags" ON "IngredientTags"."recipeId" = "Recipe"."id"
+      JOIN (SELECT "recipeId", CAST(count(*) AS INTEGER) AS likes  FROM "RecipeLikes" GROUP BY "recipeId") AS "RecipeLikes" ON "RecipeLikes"."recipeId" = "Recipe"."id"
+      WHERE "userId" != CAST(${id} AS INTEGER)
+        AND "userId" IN (
+          SELECT "toUserId"
+          FROM "UserLikes"
+          WHERE "fromUserId" = CAST(${id} AS INTEGER)
+        )
+      ORDER BY "Recipe"."updatedAt" DESC
+      LIMIT 50;
+      `;
+
+        res.json(recipes);
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ error: 'Failed to get recipes from query' });
+    }
+},
 }

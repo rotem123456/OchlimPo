@@ -6,7 +6,8 @@ const router = Router();
 router.post('/create', authenticateToken ,recipecontrollers.createRecipe);
 router.get('/tags', recipecontrollers.getAllTags);
 router.get('/ingredients', recipecontrollers.getAllIngredients);
-router.get('/:id', recipecontrollers.getRecipeById);
+router.get('/feed/:id', recipecontrollers.getRecipeFeed);
 router.post('/search', recipecontrollers.getRecipeByUserQuery);
+router.get('/:id', recipecontrollers.getRecipeById);
 
 export default router;
