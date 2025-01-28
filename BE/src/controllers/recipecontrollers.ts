@@ -147,6 +147,7 @@ export const recipecontrollers = {
 
   getRecipeFeed: async (req:Request, res: Response) => {
 
+    console.log(req.params.id);
     try {
       const id = req.params.id;
       const recipes = await prisma.$queryRaw`
@@ -161,7 +162,7 @@ export const recipecontrollers = {
           FROM "UserLikes"
           WHERE "fromUserId" = CAST(${id} AS INTEGER)
         )
-      ORDER BY "Recipe"."updatedAt" DESC
+      ORDER BY "Recipe"."createdAt" DESC
       LIMIT 50;
       `;
 

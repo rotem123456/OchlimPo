@@ -9,8 +9,9 @@ const BEpath = "http://localhost:4000";
 const ExplorePage = () => {
     const [recipes, setRecipes] = useState([]);
     const [errorInSearch, setErrorInSearch] = useState(false);
-    const { user } = useAuth();
+    const { user , logout} = useAuth();
     const navigate = useNavigate();
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     
     const getRecipesFromLikedUsers = async () => {
     
@@ -20,8 +21,6 @@ const ExplorePage = () => {
         }
 
         try {
-
-        console.log("User ID:", user);
 
           const response = await fetch(`${BEpath}/recipe/feed/${user.id}`, {
             method: "GET",
@@ -60,7 +59,50 @@ const ExplorePage = () => {
     
     return (
         <div className="explore-page">
-            <h1>Explore</h1>
+          <div className="top-right-buttons">
+          {user ? (
+    <>
+    <button onClick={() => navigate("/upload")} className="main-upload-button">
+      <img
+          src="/images/plus-sign.png"
+          style={{
+            width: '22px',
+            height: '22px',
+            display: 'inline-block',
+          }}
+        ></img>
+        <span style={{marginLeft: "10px", marginTop: "0px"}}>Create</span>
+    </button>
+    <img
+        src="/images/user-icon.png"
+        alt="user-icon"
+        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+        style={{ 
+          width: '50px',
+          height: '50px',
+          cursor: 'pointer' 
+        }}
+        className="user-menu"
+      />
+      
+      {isUserMenuOpen && (
+          <div
+            className="user-menu-box-container"
+          >
+            <span className="user-name">Welcome, {user.name}!</span>
+          <button onClick={logout} className="logout-button" style={{ right: "0px" }}>Logout</button>
+          </div>
+        )}
+      
+    </>
+  ) : (
+    <>
+      <button onClick={() => navigate('/signup')} className="signup-button-main">Sign up</button>
+      <button onClick={() => navigate('/login')} className="login-button-main">Log in</button>
+    </>
+  )}
+          </div>
+            <h1> Recent Uploads By Your Favorite Creators </h1>
             <div className="recipes-explore-container">
             {(!errorInSearch && recipes.length > 0) ? (
               recipes.map((recipe) => (
@@ -71,7 +113,7 @@ const ExplorePage = () => {
                     <p className="explore-recipe-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
                     <p className="explore-recipe-time">🕒 {recipe.time} Mins</p>
                     <p className="explore-recipe-user">👨‍🍳 {truncateText(recipe.username, 10)}</p>
-                    <p className="explore-recipe-tags">#️⃣ {truncateText(recipe.tags.join(', '), 20)}</p>
+                    <p className="explore-recipe-tags">#️⃣ {truncateText(recipe.tags.join(', '), 18)}</p>
                     <p className="explore-recipe-likes">❤️ {recipe.likes}</p>
                 </div>
                 ))

@@ -1,11 +1,16 @@
 
+.body {
+  background-color: black;
+}
+
 .explore-page {
-    background-image: url("../../../public/images/background_2.webp");
+  background: linear-gradient(to bottom, #ec7b5e, #be7741);
     background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    height: 100vh;
+    background-repeat: repeat;
+    background-position: fixed;
+    height: 200vh;
     display: flex;
+    background-attachment: fixed;
     justify-content: center;
     position: relative;
   }
