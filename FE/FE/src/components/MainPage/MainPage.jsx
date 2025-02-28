@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getTimePassed, truncateText } from "../../utils/utils";
+import {BringThemHomeTicker} from "../Bringthemhome/Bringthemhome"
 import "./MainPage.css";
 
 const BEpath = "http://localhost:4000";
@@ -447,7 +448,8 @@ const MainPage = () => {
           </>
         )}
       </div>
-
+       {/* BringThemHomeTicker component */}
+       <BringThemHomeTicker />
       {/* Left rectangle - My Profile */}
       <div className="my-profile">
         <h2 className="profile-title">My Profile</h2>
