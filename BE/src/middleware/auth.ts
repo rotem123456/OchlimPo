@@ -3,6 +3,7 @@ import { verify, JwtPayload, sign } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
+
 interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -31,7 +32,8 @@ export function authenticateToken(
     }
 
     const token = authHeader.split(' ')[1];
-    const secret = process.env.JWT_SECRET;
+    const secret = process.env.JWT_SECRET || '123456789';
+    console.log(secret);
     
     if (!secret) {
       console.error('JWT_SECRET is not set in environment variables');

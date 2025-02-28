@@ -10,23 +10,31 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myuser -d mydb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: .
     ports:
       - '4000:4000'
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://myuser:mypassword@postgres:5432/mydb
       - NODE_ENV=development
+    env_file: 
+      - .env.docker
     volumes:
       - ./src:/usr/src/app/src
       - ./prisma:/usr/src/app/prisma
       - ./package.json:/usr/src/app/package.json
       - ./package-lock.json:/usr/src/app/package-lock.json
       - ./tsconfig.json:/usr/src/app/tsconfig.json
-    command: npm run devStart
+    command: sh -c "npx prisma migrate dev && npm run devStart"
 
 volumes:
   postgres_data:

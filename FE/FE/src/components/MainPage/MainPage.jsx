@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; 
-import { getTimePassed, truncateText } from '../../utils/utils';
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { getTimePassed, truncateText } from "../../utils/utils";
 import "./MainPage.css";
 
 const BEpath = "http://localhost:4000";
@@ -23,15 +23,14 @@ const MainPage = () => {
   const [isIngredientsBoxOpen, setIsIngredientsBoxOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-
   // Other things in page
   const [recipes, setRecipes] = useState([]);
   const [bloggers, setBloggers] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const {user,logout} = useAuth();
-  let state =  false;
+  const { user, logout } = useAuth();
+  let state = false;
 
   const fetchTags = async () => {
     try {
@@ -39,10 +38,10 @@ const MainPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          Accept: "application/json",
         },
       });
-  
+
       const data = await response.json();
       setAllTags(data);
     } catch (error) {
@@ -57,10 +56,10 @@ const MainPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
+          Accept: "application/json",
         },
       });
-  
+
       const data = await response.json();
       setAllIngredients(data);
     } catch (error) {
@@ -69,47 +68,45 @@ const MainPage = () => {
     }
   };
 
- const handleSearch = async () => {
-  if (inputValue.length === 0) 
-  {
-    setSearchResults([]);
-    return;
-  }
-
-  console.log("tags:", tags);
-  try {
-    const response = await fetch(`${BEpath}/recipe/search`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      },
-      body: JSON.stringify({
-        name: inputValue,
-        maxTime: timeToMake,
-        tags: tags,
-        ingredients: ingredients,
-        appliedOrder: appliedOrder,
-      }),
-    });
-
-    const data = await response.json();
-    console.log("Advanced search results:", data);
-    if (data.error) {
-      setErrorInSearch(true);
+  const handleSearch = async () => {
+    if (inputValue.length === 0) {
       setSearchResults([]);
       return;
     }
-    else {
-      setErrorInSearch(false);
-      setSearchResults(data);
+
+    console.log("tags:", tags);
+    try {
+      const response = await fetch(`${BEpath}/recipe/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: inputValue,
+          maxTime: timeToMake,
+          tags: tags,
+          ingredients: ingredients,
+          appliedOrder: appliedOrder,
+        }),
+      });
+
+      const data = await response.json();
+      console.log("Advanced search results:", data);
+      if (data.error) {
+        setErrorInSearch(true);
+        setSearchResults([]);
+        return;
+      } else {
+        setErrorInSearch(false);
+        setSearchResults(data);
+      }
+    } catch (error) {
+      console.error("Advanced search error:", error);
+      setErrorInSearch(true);
+      setSearchResults([]);
     }
-  } catch (error) {
-    console.error("Advanced search error:", error);
-    setErrorInSearch(true);
-    setSearchResults([]);
-  }
-};
+  };
 
   // This will be called every time the page is loaded
   React.useEffect(() => {
@@ -132,15 +129,9 @@ const MainPage = () => {
     }
   };
 
-
   const ResultsFilterDropdownBox = () => {
     const elementRef = React.useRef(null);
-    const filterOptions = [
-      "Newest",
-      "Oldest",
-      "Fastest",
-      "Slowest",
-    ];
+    const filterOptions = ["Newest", "Oldest", "Fastest", "Slowest"];
 
     const toggleFilterBox = () => {
       setIsFilterBoxOpen(!isFilterBoxOpen);
@@ -148,11 +139,10 @@ const MainPage = () => {
 
     const handleItemClick = (item) => {
       setIsFilterBoxOpen(true);
-      
+
       if (filterOptions.includes(item)) {
         setappliedOrder(item);
-      }
-      else {
+      } else {
         setappliedOrder("Newest");
       }
     };
@@ -162,11 +152,11 @@ const MainPage = () => {
         setIsFilterBoxOpen(false);
       }
     };
-  
+
     React.useEffect(() => {
       // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
-  
+
       // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
@@ -174,33 +164,29 @@ const MainPage = () => {
     }, []);
 
     return (
-      <div className="filter-button-container"
-      ref={elementRef}>
-        <button
-          className="advanced-search-button"
-          onClick={toggleFilterBox}
-        >
-           <img
+      <div className="filter-button-container" ref={elementRef}>
+        <button className="advanced-search-button" onClick={toggleFilterBox}>
+          <img
             src="/images/filter-32.png"
             style={{
-              maxWidth: '30px',
-              maxHeight: '30px',
-              width: '50%',
-              height: 'auto'
+              maxWidth: "30px",
+              maxHeight: "30px",
+              width: "50%",
+              height: "auto",
             }}
-            />
+          />
         </button>
         {isFilterBoxOpen && (
           <ul className="filter-box-container">
             {filterOptions.map((option, index) => (
               <li
-              className="option-label"
-              onClick={(e) => handleItemClick(option)}
-              id = {index}
+                className="option-label"
+                onClick={(e) => handleItemClick(option)}
+                id={index}
               >
                 {appliedOrder === option ? `${option} ✔️` : option}
               </li>
-              ))}
+            ))}
           </ul>
         )}
       </div>
@@ -214,7 +200,7 @@ const MainPage = () => {
     const toggleBox = () => {
       setIsTimeBoxOpen(!isTimeBoxOpen);
     };
-  
+
     // Handle slider change
     const handleSliderChange = (event) => {
       setTimeToMake(event.target.value);
@@ -225,51 +211,52 @@ const MainPage = () => {
         setIsTimeBoxOpen(false);
       }
     };
-  
+
     React.useEffect(() => {
       // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
-  
+
       // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
       };
     }, []);
 
-  
     return (
-      <div className="time-button-container"
-      ref={elementRef}>
-        <button className="advanced-search-button" style={{width:"150px"}} onClick={toggleBox}>
-          {isTimeBoxOpen ? `Takes <= ${timeToMake} Mins` : `Takes <= ${timeToMake} Mins`}
+      <div className="time-button-container" ref={elementRef}>
+        <button
+          className="advanced-search-button"
+          style={{ width: "150px" }}
+          onClick={toggleBox}
+        >
+          {isTimeBoxOpen
+            ? `Takes <= ${timeToMake} Mins`
+            : `Takes <= ${timeToMake} Mins`}
         </button>
         {isTimeBoxOpen && (
-          <div
-            className="time-box-container"
-          >
+          <div className="time-box-container">
             <input
-            id="timeSlider"
-            type="range"
-            min="5"
-            max="240"
-            step="5"
-            value={timeToMake}
-            onChange={handleSliderChange}
-            style={{
-              height: "7px",
-              cursor: "pointer",
-              padding: "0px",
-              boxSizing: "border-box",
-              maxWidth: "60%",
-              flexShrink: "1"
-            }}
-          />
+              id="timeSlider"
+              type="range"
+              min="5"
+              max="240"
+              step="5"
+              value={timeToMake}
+              onChange={handleSliderChange}
+              style={{
+                height: "7px",
+                cursor: "pointer",
+                padding: "0px",
+                boxSizing: "border-box",
+                maxWidth: "60%",
+                flexShrink: "1",
+              }}
+            />
           </div>
         )}
       </div>
     );
   };
-
 
   const TagsDropdownBox = () => {
     const elementRef = React.useRef(null);
@@ -282,12 +269,11 @@ const MainPage = () => {
       setIsTagsBoxOpen(true);
       if (tags.includes(item)) {
         setTags((prevTags) => prevTags.filter((tag) => tag !== item));
-      }
-      else {
+      } else {
         setTags((prevTags) => [...prevTags, item]);
       }
     };
-  
+
     const getDisplayText = () => {
       if (tags.length === 0) return "Tags";
       if (tags.length <= 2) return tags.join(", ");
@@ -299,11 +285,11 @@ const MainPage = () => {
         setIsTagsBoxOpen(false);
       }
     };
-  
+
     React.useEffect(() => {
       // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
-  
+
       // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
@@ -311,25 +297,21 @@ const MainPage = () => {
     }, []);
 
     return (
-      <div className="tags-button-container"
-      ref={elementRef}>
-        <button
-          className="advanced-search-button"
-          onClick={toggleTagsBox}
-        >
+      <div className="tags-button-container" ref={elementRef}>
+        <button className="advanced-search-button" onClick={toggleTagsBox}>
           {getDisplayText()}
         </button>
         {isTagsBoxOpen && (
           <ul className="tags-box-container">
             {all_tags.map((option, index) => (
               <li
-              className="option-label"
-              onClick={(e) => handleItemClick(option)}
-              id = {index}
+                className="option-label"
+                onClick={(e) => handleItemClick(option)}
+                id={index}
               >
                 {tags.includes(option) ? `${option} ✔️` : option}
               </li>
-              ))}
+            ))}
           </ul>
         )}
       </div>
@@ -346,13 +328,14 @@ const MainPage = () => {
     const handleItemClick = (item) => {
       setIsIngredientsBoxOpen(true);
       if (ingredients.includes(item)) {
-        setIngredients((prevIngredients) => prevIngredients.filter((ing) => ing !== item));
-      }
-      else {
+        setIngredients((prevIngredients) =>
+          prevIngredients.filter((ing) => ing !== item)
+        );
+      } else {
         setIngredients((prevIngredients) => [...prevIngredients, item]);
       }
     };
-  
+
     const getDisplayText = () => {
       if (ingredients.length === 0) return "Ingredients";
       if (ingredients.length <= 2) return ingredients.join(", ");
@@ -364,11 +347,11 @@ const MainPage = () => {
         setIsIngredientsBoxOpen(false);
       }
     };
-  
+
     React.useEffect(() => {
       // Attach event listener to the document
       document.addEventListener("mousedown", handleClickOutside);
-  
+
       // Cleanup event listener on component unmount
       return () => {
         document.removeEventListener("mousedown", handleClickOutside);
@@ -376,8 +359,7 @@ const MainPage = () => {
     }, []);
 
     return (
-      <div className="ingredients-button-container"
-      ref={elementRef}>
+      <div className="ingredients-button-container" ref={elementRef}>
         <button
           className="advanced-search-button"
           onClick={toggleIngredientsBox}
@@ -388,13 +370,13 @@ const MainPage = () => {
           <ul className="ingredients-box-container">
             {all_ingredients.map((option, index) => (
               <li
-              className="option-label"
-              onClick={(e) => handleItemClick(option)}
-              id = {index}
+                className="option-label"
+                onClick={(e) => handleItemClick(option)}
+                id={index}
               >
                 {ingredients.includes(option) ? `${option} ✔️` : option}
               </li>
-              ))}
+            ))}
           </ul>
         )}
       </div>
@@ -405,48 +387,66 @@ const MainPage = () => {
     <div className="background">
       {/* Top-right Login and Sign-up buttons */}
       <div className="top-right-buttons">
-  {user ? (
-    <>
-    <button onClick={() => navigate("/upload")} className="main-upload-button">
-      <img
-          src="/images/plus-sign.png"
-          style={{
-            width: '22px',
-            height: '22px',
-            display: 'inline-block',
-          }}
-        ></img>
-        <span style={{marginLeft: "10px", marginTop: "0px"}}>Create</span>
-    </button>
-    <img
-        src="/images/user-icon.png"
-        alt="user-icon"
-        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-        style={{ 
-          width: '50px',
-          height: '50px',
-          cursor: 'pointer' 
-        }}
-        className="user-menu"
-      />
-      
-      {isUserMenuOpen && (
-          <div
-            className="user-menu-box-container"
-          >
-            <span className="user-name">Welcome, {user.name}!</span>
-          <button onClick={logout} className="logout-button" style={{ right: "0px" }}>Logout</button>
-          </div>
+        {user ? (
+          <>
+            <button
+              onClick={() => navigate("/upload")}
+              className="main-upload-button"
+            >
+              <img
+                src="/images/plus-sign.png"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  display: "inline-block",
+                }}
+              ></img>
+              <span style={{ marginLeft: "10px", marginTop: "0px" }}>
+                Create
+              </span>
+            </button>
+            <img
+              src="/images/user-icon.png"
+              alt="user-icon"
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              style={{
+                width: "50px",
+                height: "50px",
+                cursor: "pointer",
+              }}
+              className="user-menu"
+            />
+
+            {isUserMenuOpen && (
+              <div className="user-menu-box-container">
+                <span className="user-name">Welcome, {user.name}!</span>
+                <button
+                  onClick={logout}
+                  className="logout-button"
+                  style={{ right: "0px" }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => navigate("/signup")}
+              className="signup-button-main"
+            >
+              Sign up
+            </button>
+            <button
+              onClick={() => navigate("/login")}
+              className="login-button-main"
+            >
+              Log in
+            </button>
+          </>
         )}
-      
-    </>
-  ) : (
-    <>
-      <button onClick={() => navigate('/signup')} className="signup-button-main">Sign up</button>
-      <button onClick={() => navigate('/login')} className="login-button-main">Log in</button>
-    </>
-  )}
-</div>
+      </div>
 
       {/* Left rectangle - My Profile */}
       <div className="my-profile">
@@ -521,47 +521,68 @@ const MainPage = () => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)} // Update query state
           />
-          {(inputValue.length > 0) && (<button className="clear-search-button" onClick={() => setInputValue("")}>
-            <span role="img" aria-label="search">
-              x
-            </span>
-          </button>)}
+          {inputValue.length > 0 && (
+            <button
+              className="clear-search-button"
+              onClick={() => setInputValue("")}
+            >
+              <span role="img" aria-label="search">
+                x
+              </span>
+            </button>
+          )}
         </div>
         <ResultsFilterDropdownBox />
         <TimeSliderBox />
         <TagsDropdownBox />
         <IngredientsDropdownBox />
         <div className="surprise-button-container">
-           <button onClick={() => navigate('/weather')} 
+          <button
+            onClick={() => navigate("/weather")}
             className="advanced-search-button"
-            style={{width:"165%"}}
-            >
+            style={{ width: "165%" }}
+          >
             I'm Feeling Lazy...
-           </button>
+          </button>
         </div>
         <div className="search-results">
-          {((searchResults.length > 0) && (inputValue.length > 0) && !errorInSearch) ? (
-            searchResults.map((recipe, index) => (
-              <div key={index} className="recipe-item">
-                <h3 className="recipe-item-title">{recipe.name}</h3>
-                <p className="recipe-item-description">{truncateText(recipe.shortDescription, 117)}</p>
-                <p className="recipe-item-ago">⏳ {getTimePassed(recipe.createdAt)} ago</p>
-                <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
-                <p className="recipe-item-user">👨‍🍳 {truncateText(recipe.username, 10)}</p>
-                <p className="recipe-item-tags">#️⃣ {truncateText(recipe.tags.join(', '), 14)}</p>
-              </div>
-            ))
-          ) : (
-            ((searchResults.length === 0) && (inputValue.length > 0)) &&
-            <div key="1" className="recipe-item">
-                <h3 className="recipe-item-title">
-                  {(errorInSearch) ? ("An Error Occured During Search") : ("No Recipes Found")}
-                  </h3>
-                <p className="recipe-item-description" style={{marginTop: "2%"}}>
-                  {(errorInSearch) ? ("Please try again on a different time :)") : ("You can explore different filters to match your taste")}
+          {searchResults.length > 0 && inputValue.length > 0 && !errorInSearch
+            ? searchResults.map((recipe, index) => (
+                <div key={index} className="recipe-item">
+                  <h3 className="recipe-item-title">{recipe.name}</h3>
+                  <p className="recipe-item-description">
+                    {truncateText(recipe.shortDescription, 117)}
                   </p>
-              </div>
-          )}
+                  <p className="recipe-item-ago">
+                    ⏳ {getTimePassed(recipe.createdAt)} ago
+                  </p>
+                  <p className="recipe-item-time">🕒 {recipe.time} Mins</p>
+                  <p className="recipe-item-user">
+                    👨‍🍳 {truncateText(recipe.username, 10)}
+                  </p>
+                  <p className="recipe-item-tags">
+                    #️⃣ {truncateText(recipe.tags.join(", "), 14)}
+                  </p>
+                </div>
+              ))
+            : searchResults.length === 0 &&
+              inputValue.length > 0 && (
+                <div key="1" className="recipe-item">
+                  <h3 className="recipe-item-title">
+                    {errorInSearch
+                      ? "An Error Occured During Search"
+                      : "No Recipes Found"}
+                  </h3>
+                  <p
+                    className="recipe-item-description"
+                    style={{ marginTop: "2%" }}
+                  >
+                    {errorInSearch
+                      ? "Please try again on a different time :)"
+                      : "You can explore different filters to match your taste"}
+                  </p>
+                </div>
+              )}
         </div>
       </div>
 
