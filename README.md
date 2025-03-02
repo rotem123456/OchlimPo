@@ -29,7 +29,7 @@ Before setting up the application, ensure you have the following installed:
    ```bash
   npm install npm start 
 
-Creating the .env Files
+## Creating the .env Files
 Security Token Setup
 
 Create a .env file in the BE/src/middleware folder with a JWT token:
