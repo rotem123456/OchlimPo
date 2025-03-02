@@ -35,7 +35,7 @@ Before setting up the application, ensure you have the following installed:
 npm install npm start
   ```
 
-## Creating the .env Files
+
 ## Creating the .env Files
 Security Token Setup
 
