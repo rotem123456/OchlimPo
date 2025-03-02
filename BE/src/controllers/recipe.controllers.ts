@@ -89,7 +89,7 @@ export const recipecontrollers = {
         const tagsArray = req.body.tags.map((tag: string) => `'${tag.replace(/'/g, "''")}'`).join(',');
         const ingredientsArray = req.body.ingredients.map((ing: string) => `'${ing.replace(/'/g, "''")}'`).join(',');
   
-        // Set a default value in case the value is not in the map
+
         const orderCol = orderByMap.get(req.body.appliedOrder)?.[0] ?? 'updatedAt';
         const orderDirection = orderByMap.get(req.body.appliedOrder)?.[1] ?? 'DESC';
         console.log(orderCol, orderDirection);

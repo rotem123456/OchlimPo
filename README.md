@@ -28,3 +28,24 @@ Before setting up the application, ensure you have the following installed:
    Navigate to the `FE` folder and run the following command to build and start the server (port 3000):
    ```bash
   npm install npm start 
+
+Creating the .env Files
+Security Token Setup
+
+Create a .env file in the BE/src/middleware folder with a JWT token:
+
+# Create the .env file
+touch BE/src/middleware/.env
+
+# Generate a random JWT secret and add it to the .env file
+echo "JWT_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")" >> BE/src/middleware/.env
+
+Create a .env.docker file in the BE directory with the same JWT token:
+
+bashCopy# First, save the JWT token to a variable
+JWT_TOKEN=$(grep JWT_SECRET BE/src/middleware/.env | cut -d= -f2)
+
+# Create the .env.docker file with the same token
+echo "JWT_SECRET=$JWT_TOKEN" > BE/.env.docker
+
+Important: Both files must contain the same JWT token for authentication to work properly. This setup enables you to make POST requests to the backend.
